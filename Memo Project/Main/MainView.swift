@@ -14,7 +14,7 @@ final class MainView: BaseView {
     lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .insetGrouped)
         view.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.reusableIdentifier)
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .CustomBackgroundColorForView
         return view
     }()
     

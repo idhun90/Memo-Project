@@ -6,7 +6,7 @@ class WalkthroughtView: BaseView {
     
     let noticeView: UIView = {
         let view = UIView(frame: .zero)
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .CustomBackgroundColorForView
         view.layer.cornerRadius = 15
         return view
     }()

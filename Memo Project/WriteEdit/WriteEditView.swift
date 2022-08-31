@@ -7,7 +7,7 @@ class WriteEditView: BaseView {
     let textView: UITextView = {
         let view = UITextView()
         let spacing: CGFloat = 20
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .CustomBackgroundColorForView
         view.font = .systemFont(ofSize: 17)
         view.textContainerInset = UIEdgeInsets(top: spacing, left: spacing, bottom: 0, right: spacing)
         return view

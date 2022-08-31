@@ -1,10 +1,33 @@
 import UIKit
 
+import RealmSwift
+
 final class MainViewController: BaseViewController {
     
     private let mainView = MainView()
     
-    let list = ["더미", "더미2", "더미3"]
+    let repository = RealmMemoRepository()
+    
+    var allMemos: Results<RealmMemo>! {
+        didSet {
+            print("allMemos 변화 발생")
+            print("========================")
+        }
+    }
+    
+    var memos: Results<RealmMemo>! {
+        didSet {
+            print("memos 변화 발생")
+            print("========================")
+        }
+    }
+    
+    var pinMemos: Results<RealmMemo>! {
+        didSet {
+            print("pinMemos 변화 발생")
+            print("========================")
+        }
+    }
     
     override func loadView() {
         self.view = mainView
@@ -12,8 +35,16 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(#function, "호출됨")
+        print("========================")
         
         showOnceWalkthroughView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print(#function, "호출됨")
+        print("========================")
     }
     
     override func configureUI() {
@@ -25,7 +56,7 @@ final class MainViewController: BaseViewController {
     }
     
     override func setNavigationBarUI() {
-        navigationItem.title = "\(list.count)개의 메모"
+        navigationItem.title = "개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = false
         navigationController?.navigationBar.tintColor = .ButtonTintColor
@@ -51,7 +82,6 @@ final class MainViewController: BaseViewController {
     }
     
     @objc func writeButtonClicked() {
-        // 작성 화면 이동
         let vc = WriteEditViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -75,20 +105,45 @@ extension MainViewController: UISearchResultsUpdating {
 //MARK: - extension UITableViewDelegate, UITableViewDataSource
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65
-    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 65
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return section == 0 ? "고정" : "메모"
     }
     
+    //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    //
+    //        let headerView: UIView = {
+    //           let view = UIView()
+    //            view.backgroundColor = .red
+    //            return view
+    //        }()
+    //
+    //        let headerTitle: UILabel = {
+    //            let view = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+    //            view.text = "테스트"
+    //            view.textColor = .black
+    //            view.font = .systemFont(ofSize: 18, weight: .bold)
+    //            return view
+    //        }()
+    //        headerView.addSubview(headerTitle)
+    //
+    //        return headerView
+    //    }
+    //
+    //    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    //        return 50
+    //    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
