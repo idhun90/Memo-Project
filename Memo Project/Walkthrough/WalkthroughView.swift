@@ -11,14 +11,14 @@ class WalkthroughtView: BaseView {
         return view
     }()
     
-    let noticeTopLabel: CustomLabel = {
-        let view = CustomLabel()
+    let noticeTopLabel: CustomForWalkthroughtViewLabel = {
+        let view = CustomForWalkthroughtViewLabel()
         view.text = "환영합니다."
         return view
     }()
     
-    let noticeCenterLabel: CustomLabel = {
-        let view = CustomLabel()
+    let noticeCenterLabel: CustomForWalkthroughtViewLabel = {
+        let view = CustomForWalkthroughtViewLabel()
         view.text = "당신만의 메모를 작성하고 관리해보세요!"
         return view
     }()
@@ -64,6 +64,8 @@ class WalkthroughtView: BaseView {
     }
     
     override func setConstraints() {
+        let spacing = 20
+        
         noticeView.snp.makeConstraints {
             $0.height.equalToSuperview().multipliedBy(0.3)
             $0.width.equalTo(noticeView.snp.height)
@@ -71,14 +73,12 @@ class WalkthroughtView: BaseView {
         }
         
         stackView.snp.makeConstraints {
-            let spacing = 20
             $0.leading.top.equalTo(noticeView).offset(spacing)
             $0.trailing.equalTo(noticeView.snp.trailing).offset(-spacing)
             $0.bottom.equalTo(noticeButton.snp.top).offset(-spacing-5)
         }
         
         noticeButton.snp.makeConstraints {
-            let spacing = 20
             $0.height.equalTo(noticeView.snp.height).multipliedBy(0.18)
             $0.leading.equalTo(noticeView.snp.leading).offset(spacing)
             $0.trailing.equalTo(noticeView.snp.trailing).offset(-spacing)

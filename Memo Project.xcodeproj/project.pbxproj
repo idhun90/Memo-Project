@@ -29,7 +29,8 @@
 		1473130028BF66D100BD5105 /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312FF28BF66D100BD5105 /* WalkthroughViewController.swift */; };
 		1473130228BF670E00BD5105 /* WalkthroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130128BF670E00BD5105 /* WalkthroughView.swift */; };
 		1473130528BF842700BD5105 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130428BF842700BD5105 /* Constant.swift */; };
-		1473130728BF874600BD5105 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130628BF874600BD5105 /* CustomLabel.swift */; };
+		1473130728BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130628BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift */; };
+		1473130A28BF918400BD5105 /* CustomForCellLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130928BF918400BD5105 /* CustomForCellLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,7 +57,8 @@
 		147312FF28BF66D100BD5105 /* WalkthroughViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughViewController.swift; sourceTree = "<group>"; };
 		1473130128BF670E00BD5105 /* WalkthroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughView.swift; sourceTree = "<group>"; };
 		1473130428BF842700BD5105 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
-		1473130628BF874600BD5105 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
+		1473130628BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomForWalkthroughtViewLabel.swift; sourceTree = "<group>"; };
+		1473130928BF918400BD5105 /* CustomForCellLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomForCellLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,7 +186,8 @@
 		1473130828BF874A00BD5105 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
-				1473130628BF874600BD5105 /* CustomLabel.swift */,
+				1473130628BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift */,
+				1473130928BF918400BD5105 /* CustomForCellLabel.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -268,13 +271,14 @@
 			files = (
 				147312F128BF516700BD5105 /* Transition + Extension.swift in Sources */,
 				14049D9C28BF1A7500495E0A /* ViewController.swift in Sources */,
-				1473130728BF874600BD5105 /* CustomLabel.swift in Sources */,
+				1473130728BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift in Sources */,
 				14049DC328BF2A1A00495E0A /* MainTableViewCell.swift in Sources */,
 				14049DBF28BF239E00495E0A /* MainView.swift in Sources */,
 				14049DB928BF222800495E0A /* BaseViewController.swift in Sources */,
 				14049DC528BF2AA500495E0A /* Reusable.swift in Sources */,
 				147312F328BF538500BD5105 /* Alert + Extension.swift in Sources */,
 				14049DBB28BF229200495E0A /* BaseView.swift in Sources */,
+				1473130A28BF918400BD5105 /* CustomForCellLabel.swift in Sources */,
 				14049D9828BF1A7500495E0A /* AppDelegate.swift in Sources */,
 				147312FA28BF603A00BD5105 /* UIColor + Extension.swift in Sources */,
 				14049DBD28BF230300495E0A /* BaseTableViewCell.swift in Sources */,

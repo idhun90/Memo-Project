@@ -4,6 +4,8 @@ final class MainViewController: BaseViewController {
     
     private let mainView = MainView()
     
+    let list = ["더미", "더미2", "더미3"]
+    
     override func loadView() {
         self.view = mainView
     }
@@ -23,7 +25,7 @@ final class MainViewController: BaseViewController {
     }
     
     override func setNavigationBarUI() {
-        navigationItem.title = "0개의 메모"
+        navigationItem.title = "\(list.count)개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = false
         navigationController?.navigationBar.tintColor = .ButtonTintColor
@@ -73,12 +75,16 @@ extension MainViewController: UISearchResultsUpdating {
 //MARK: - extension UITableViewDelegate, UITableViewDataSource
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 65
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return nil
+        return section == 0 ? "고정" : "메모"
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

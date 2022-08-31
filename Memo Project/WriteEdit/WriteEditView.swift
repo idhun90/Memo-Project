@@ -9,7 +9,7 @@ class WriteEditView: BaseView {
         let spacing: CGFloat = 20
         view.backgroundColor = .systemBackground
         view.font = .systemFont(ofSize: 17)
-        view.textContainerInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
+        view.textContainerInset = UIEdgeInsets(top: spacing, left: spacing, bottom: 0, right: spacing)
         return view
     }()
     
@@ -28,7 +28,6 @@ class WriteEditView: BaseView {
     override func setConstraints() {
         textView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-
         }
     }
 }
