@@ -100,9 +100,7 @@
 		14049DB528BF1E4100495E0A /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				14049DB828BF222800495E0A /* BaseViewController.swift */,
-				14049DBA28BF229200495E0A /* BaseView.swift */,
-				14049DBC28BF230300495E0A /* BaseTableViewCell.swift */,
+				147312EE28BF400200BD5105 /* Base */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -120,6 +118,16 @@
 				14049DC428BF2AA500495E0A /* Reusable.swift */,
 			);
 			path = Reusable;
+			sourceTree = "<group>";
+		};
+		147312EE28BF400200BD5105 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				14049DB828BF222800495E0A /* BaseViewController.swift */,
+				14049DBA28BF229200495E0A /* BaseView.swift */,
+				14049DBC28BF230300495E0A /* BaseTableViewCell.swift */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
