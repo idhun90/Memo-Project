@@ -21,6 +21,8 @@
 		14049DC128BF297200495E0A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14049DC028BF297200495E0A /* MainViewController.swift */; };
 		14049DC328BF2A1A00495E0A /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14049DC228BF2A1A00495E0A /* MainTableViewCell.swift */; };
 		14049DC528BF2AA500495E0A /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14049DC428BF2AA500495E0A /* Reusable.swift */; };
+		147312F128BF516700BD5105 /* Transition + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F028BF516700BD5105 /* Transition + Extension.swift */; };
+		147312F328BF538500BD5105 /* Alert + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F228BF538500BD5105 /* Alert + Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		14049DC028BF297200495E0A /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		14049DC228BF2A1A00495E0A /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		14049DC428BF2AA500495E0A /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
+		147312F028BF516700BD5105 /* Transition + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transition + Extension.swift"; sourceTree = "<group>"; };
+		147312F228BF538500BD5105 /* Alert + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alert + Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +112,8 @@
 		14049DB628BF1E5000495E0A /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				147312F028BF516700BD5105 /* Transition + Extension.swift */,
+				147312F228BF538500BD5105 /* Alert + Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -207,11 +213,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				147312F128BF516700BD5105 /* Transition + Extension.swift in Sources */,
 				14049D9C28BF1A7500495E0A /* ViewController.swift in Sources */,
 				14049DC328BF2A1A00495E0A /* MainTableViewCell.swift in Sources */,
 				14049DBF28BF239E00495E0A /* MainView.swift in Sources */,
 				14049DB928BF222800495E0A /* BaseViewController.swift in Sources */,
 				14049DC528BF2AA500495E0A /* Reusable.swift in Sources */,
+				147312F328BF538500BD5105 /* Alert + Extension.swift in Sources */,
 				14049DBB28BF229200495E0A /* BaseView.swift in Sources */,
 				14049D9828BF1A7500495E0A /* AppDelegate.swift in Sources */,
 				14049DBD28BF230300495E0A /* BaseTableViewCell.swift in Sources */,
