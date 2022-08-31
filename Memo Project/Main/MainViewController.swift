@@ -55,4 +55,30 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+            print(#function)
+            completionHandler(true)
+            // 데이터 처리
+        }
+        
+        pin.backgroundColor = .systemOrange
+        pin.image = UIImage(systemName: "pin.fill") // 고정된 상태라면 다른 아이콘 대체
+        
+        return UISwipeActionsConfiguration(actions: [pin])
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
+            print(#function)
+            completionHandler(true)
+        }
+        
+        delete.image = UIImage(systemName: "trash.fill")
+        
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
 }
