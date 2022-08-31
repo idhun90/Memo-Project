@@ -11,6 +11,7 @@ final class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        showOnceWalkthroughView()
     }
     
     override func configureUI() {
@@ -18,7 +19,6 @@ final class MainViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.searchBar.searchResultsUpdater = self
         
-        setNavigationBarUI()
         setToolBarUI()
     }
     
@@ -26,6 +26,7 @@ final class MainViewController: BaseViewController {
         navigationItem.title = "0개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = false
+        navigationController?.navigationBar.tintColor = .ButtonTintColor
         
         navigationItem.searchController = mainView.searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -36,7 +37,7 @@ final class MainViewController: BaseViewController {
         var barButtonItems: [UIBarButtonItem] = []
         
         let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonClicked))
-        writeButton.tintColor = .systemOrange
+        writeButton.tintColor = .ButtonTintColor
         
         let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         
@@ -52,15 +53,24 @@ final class MainViewController: BaseViewController {
         let vc = WriteEditViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func showOnceWalkthroughView() {
+        if !UserDefaults.standard.bool(forKey: WalkthroughtViewToggle.once) {
+            let vc = WalkthroughViewController()
+            transition(viewController: vc, transitionStyle: .presentOverFullScreen)
+        }
+    }
 }
 
-//MARK: - extension
+//MARK: - extension UISearchResultsUpdating
 
 extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         print("입력된 단어: \(searchController.searchBar.text!)")
     }
 }
+
+//MARK: - extension UITableViewDelegate, UITableViewDataSource
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -100,6 +110,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
             print(#function)
             completionHandler(true)
+            self.showConfirmToDeleteAlert()
         }
         
         delete.image = UIImage(systemName: "trash.fill")

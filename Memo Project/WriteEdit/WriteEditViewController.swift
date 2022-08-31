@@ -18,9 +18,10 @@ class WriteEditViewController: BaseViewController {
     }
     
     override func setNavigationBarUI() {
+        navigationItem.largeTitleDisplayMode = .never
+    
         let shareButton = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(shareButtonClicked))
-        
-        let okButton = UIBarButtonItem(title: "확인", style: .done, target: self, action: #selector(okButtonClicked))
+        let okButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(okButtonClicked))
         
         navigationItem.rightBarButtonItems = [okButton,shareButton]
     }
