@@ -14,7 +14,7 @@ final class MainView: BaseView {
     lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .insetGrouped)
         view.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.reusableIdentifier)
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray6
         return view
     }()
     
@@ -28,8 +28,6 @@ final class MainView: BaseView {
     
     override func configureUI() {
         self.addSubview(tableView)
-        self.backgroundColor = .red
-        
     }
     
     override func setConstraints() {

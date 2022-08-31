@@ -23,6 +23,8 @@
 		14049DC528BF2AA500495E0A /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14049DC428BF2AA500495E0A /* Reusable.swift */; };
 		147312F128BF516700BD5105 /* Transition + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F028BF516700BD5105 /* Transition + Extension.swift */; };
 		147312F328BF538500BD5105 /* Alert + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F228BF538500BD5105 /* Alert + Extension.swift */; };
+		147312F628BF559800BD5105 /* WriteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F528BF559800BD5105 /* WriteEditViewController.swift */; };
+		147312F828BF55A000BD5105 /* WriteEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F728BF55A000BD5105 /* WriteEditView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		14049DC428BF2AA500495E0A /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		147312F028BF516700BD5105 /* Transition + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transition + Extension.swift"; sourceTree = "<group>"; };
 		147312F228BF538500BD5105 /* Alert + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alert + Extension.swift"; sourceTree = "<group>"; };
+		147312F528BF559800BD5105 /* WriteEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteEditViewController.swift; sourceTree = "<group>"; };
+		147312F728BF55A000BD5105 /* WriteEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				14049DB728BF214900495E0A /* Reusable */,
+				147312F428BF556F00BD5105 /* WriteEdit */,
 				14049DAC28BF1D5B00495E0A /* Main */,
 				14049DB528BF1E4100495E0A /* Utility */,
 				14049DB628BF1E5000495E0A /* Extension */,
@@ -134,6 +139,15 @@
 				14049DBC28BF230300495E0A /* BaseTableViewCell.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		147312F428BF556F00BD5105 /* WriteEdit */ = {
+			isa = PBXGroup;
+			children = (
+				147312F528BF559800BD5105 /* WriteEditViewController.swift */,
+				147312F728BF55A000BD5105 /* WriteEditView.swift */,
+			);
+			path = WriteEdit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -223,6 +237,8 @@
 				14049DBB28BF229200495E0A /* BaseView.swift in Sources */,
 				14049D9828BF1A7500495E0A /* AppDelegate.swift in Sources */,
 				14049DBD28BF230300495E0A /* BaseTableViewCell.swift in Sources */,
+				147312F828BF55A000BD5105 /* WriteEditView.swift in Sources */,
+				147312F628BF559800BD5105 /* WriteEditViewController.swift in Sources */,
 				14049D9A28BF1A7500495E0A /* SceneDelegate.swift in Sources */,
 				14049DC128BF297200495E0A /* MainViewController.swift in Sources */,
 			);

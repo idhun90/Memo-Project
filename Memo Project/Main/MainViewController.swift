@@ -11,8 +11,6 @@ final class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationBarUI()
-        setToolBarUI()
     }
     
     override func configureUI() {
@@ -20,16 +18,17 @@ final class MainViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.searchBar.searchResultsUpdater = self
         
+        setNavigationBarUI()
+        setToolBarUI()
     }
     
-    func setNavigationBarUI() {
+    override func setNavigationBarUI() {
         navigationItem.title = "0개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = false
         
         navigationItem.searchController = mainView.searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
-        
     }
     
     func setToolBarUI() {
@@ -50,6 +49,8 @@ final class MainViewController: BaseViewController {
     
     @objc func writeButtonClicked() {
         // 작성 화면 이동
+        let vc = WriteEditViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
