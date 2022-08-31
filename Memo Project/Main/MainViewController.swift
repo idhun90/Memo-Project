@@ -12,6 +12,7 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigationBarUI()
+        setToolBarUI()
     }
     
     override func configureUI() {
@@ -24,9 +25,31 @@ final class MainViewController: BaseViewController {
     func setNavigationBarUI() {
         navigationItem.title = "0개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.isToolbarHidden = false
         
         navigationItem.searchController = mainView.searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+    }
+    
+    func setToolBarUI() {
+        
+        var barButtonItems: [UIBarButtonItem] = []
+        
+        let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonClicked))
+        writeButton.tintColor = .systemOrange
+        
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        
+        [space, writeButton].forEach {
+            barButtonItems.append($0)
+        }
+        
+        self.toolbarItems = barButtonItems
+    }
+    
+    @objc func writeButtonClicked() {
+        // 작성 화면 이동
     }
 }
 
@@ -46,6 +69,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return nil
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
     }
