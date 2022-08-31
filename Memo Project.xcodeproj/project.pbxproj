@@ -25,6 +25,11 @@
 		147312F328BF538500BD5105 /* Alert + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F228BF538500BD5105 /* Alert + Extension.swift */; };
 		147312F628BF559800BD5105 /* WriteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F528BF559800BD5105 /* WriteEditViewController.swift */; };
 		147312F828BF55A000BD5105 /* WriteEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F728BF55A000BD5105 /* WriteEditView.swift */; };
+		147312FA28BF603A00BD5105 /* UIColor + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312F928BF603A00BD5105 /* UIColor + Extension.swift */; };
+		1473130028BF66D100BD5105 /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147312FF28BF66D100BD5105 /* WalkthroughViewController.swift */; };
+		1473130228BF670E00BD5105 /* WalkthroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130128BF670E00BD5105 /* WalkthroughView.swift */; };
+		1473130528BF842700BD5105 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130428BF842700BD5105 /* Constant.swift */; };
+		1473130728BF874600BD5105 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473130628BF874600BD5105 /* CustomLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +52,11 @@
 		147312F228BF538500BD5105 /* Alert + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alert + Extension.swift"; sourceTree = "<group>"; };
 		147312F528BF559800BD5105 /* WriteEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteEditViewController.swift; sourceTree = "<group>"; };
 		147312F728BF55A000BD5105 /* WriteEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteEditView.swift; sourceTree = "<group>"; };
+		147312F928BF603A00BD5105 /* UIColor + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extension.swift"; sourceTree = "<group>"; };
+		147312FF28BF66D100BD5105 /* WalkthroughViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughViewController.swift; sourceTree = "<group>"; };
+		1473130128BF670E00BD5105 /* WalkthroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughView.swift; sourceTree = "<group>"; };
+		1473130428BF842700BD5105 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		1473130628BF874600BD5105 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,8 +91,9 @@
 			isa = PBXGroup;
 			children = (
 				14049DB728BF214900495E0A /* Reusable */,
-				147312F428BF556F00BD5105 /* WriteEdit */,
+				147312FE28BF66BF00BD5105 /* Walkthrough */,
 				14049DAC28BF1D5B00495E0A /* Main */,
+				147312F428BF556F00BD5105 /* WriteEdit */,
 				14049DB528BF1E4100495E0A /* Utility */,
 				14049DB628BF1E5000495E0A /* Extension */,
 				14049D9728BF1A7500495E0A /* AppDelegate.swift */,
@@ -110,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				147312EE28BF400200BD5105 /* Base */,
+				1473130828BF874A00BD5105 /* Custom */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -117,8 +129,7 @@
 		14049DB628BF1E5000495E0A /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				147312F028BF516700BD5105 /* Transition + Extension.swift */,
-				147312F228BF538500BD5105 /* Alert + Extension.swift */,
+				147312FB28BF62FB00BD5105 /* UIViewControlelr */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -127,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				14049DC428BF2AA500495E0A /* Reusable.swift */,
+				1473130428BF842700BD5105 /* Constant.swift */,
 			);
 			path = Reusable;
 			sourceTree = "<group>";
@@ -148,6 +160,33 @@
 				147312F728BF55A000BD5105 /* WriteEditView.swift */,
 			);
 			path = WriteEdit;
+			sourceTree = "<group>";
+		};
+		147312FB28BF62FB00BD5105 /* UIViewControlelr */ = {
+			isa = PBXGroup;
+			children = (
+				147312F028BF516700BD5105 /* Transition + Extension.swift */,
+				147312F228BF538500BD5105 /* Alert + Extension.swift */,
+				147312F928BF603A00BD5105 /* UIColor + Extension.swift */,
+			);
+			path = UIViewControlelr;
+			sourceTree = "<group>";
+		};
+		147312FE28BF66BF00BD5105 /* Walkthrough */ = {
+			isa = PBXGroup;
+			children = (
+				147312FF28BF66D100BD5105 /* WalkthroughViewController.swift */,
+				1473130128BF670E00BD5105 /* WalkthroughView.swift */,
+			);
+			path = Walkthrough;
+			sourceTree = "<group>";
+		};
+		1473130828BF874A00BD5105 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				1473130628BF874600BD5105 /* CustomLabel.swift */,
+			);
+			path = Custom;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,6 +268,7 @@
 			files = (
 				147312F128BF516700BD5105 /* Transition + Extension.swift in Sources */,
 				14049D9C28BF1A7500495E0A /* ViewController.swift in Sources */,
+				1473130728BF874600BD5105 /* CustomLabel.swift in Sources */,
 				14049DC328BF2A1A00495E0A /* MainTableViewCell.swift in Sources */,
 				14049DBF28BF239E00495E0A /* MainView.swift in Sources */,
 				14049DB928BF222800495E0A /* BaseViewController.swift in Sources */,
@@ -236,9 +276,13 @@
 				147312F328BF538500BD5105 /* Alert + Extension.swift in Sources */,
 				14049DBB28BF229200495E0A /* BaseView.swift in Sources */,
 				14049D9828BF1A7500495E0A /* AppDelegate.swift in Sources */,
+				147312FA28BF603A00BD5105 /* UIColor + Extension.swift in Sources */,
 				14049DBD28BF230300495E0A /* BaseTableViewCell.swift in Sources */,
+				1473130528BF842700BD5105 /* Constant.swift in Sources */,
 				147312F828BF55A000BD5105 /* WriteEditView.swift in Sources */,
+				1473130028BF66D100BD5105 /* WalkthroughViewController.swift in Sources */,
 				147312F628BF559800BD5105 /* WriteEditViewController.swift in Sources */,
+				1473130228BF670E00BD5105 /* WalkthroughView.swift in Sources */,
 				14049D9A28BF1A7500495E0A /* SceneDelegate.swift in Sources */,
 				14049DC128BF297200495E0A /* MainViewController.swift in Sources */,
 			);
