@@ -23,7 +23,7 @@ class RealmMemoRepository: RealmMemoRepositoryType {
     }
     
     func fetchRealm() -> Results<RealmMemo> {
-        return localRealm.objects(RealmMemo.self)
+        return localRealm.objects(RealmMemo.self).sorted(byKeyPath: "realmCreatedDate" , ascending: false)
     }
     
     func fetchRealmSort(sort: String, ascending: Bool) -> Results<RealmMemo> {

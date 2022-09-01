@@ -28,20 +28,20 @@ final class MainViewController: BaseViewController {
             print("========================")
         }
     }
-    // 메모
-    var memos: Results<RealmMemo>! {
-        didSet {
-            print("memos 변화 발생")
-            print("========================")
-        }
-    }
-    // 고정된 메모
-    var pinMemos: Results<RealmMemo>! {
-        didSet {
-            print("pinMemos 변화 발생")
-            print("========================")
-        }
-    }
+//    // 메모
+//    var memos: Results<RealmMemo>! {
+//        didSet {
+//            print("memos 변화 발생")
+//            print("========================")
+//        }
+//    }
+//    // 고정된 메모
+//    var pinMemos: Results<RealmMemo>! {
+//        didSet {
+//            print("pinMemos 변화 발생")
+//            print("========================")
+//        }
+//    }
     
     override func loadView() {
         self.view = mainView
@@ -60,6 +60,10 @@ final class MainViewController: BaseViewController {
         super.viewWillAppear(animated)
         print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
         print("================================================")
+        
+        allMemos = repository.fetchRealm()
+        mainView.tableView.reloadData()
+        setNavigationBarTitle()
     }
     
     //MARK: - UI 셋업
@@ -68,17 +72,18 @@ final class MainViewController: BaseViewController {
         mainView.tableView.dataSource = self
         mainView.searchBar.searchResultsUpdater = self
         
-        setToolBarUI()
-    }
-    
-    override func setNavigationBarUI() {
-        navigationItem.title = countMemosToTitle() + "개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = false
         navigationController?.navigationBar.tintColor = .ButtonTintColor
         
         navigationItem.searchController = mainView.searchBar
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        setToolBarUI()
+    }
+    
+    func setNavigationBarTitle() {
+        navigationItem.title = countMemosToTitle() + "개의 메모"
     }
     
     func setToolBarUI() {
@@ -115,7 +120,7 @@ final class MainViewController: BaseViewController {
         numberFormatter.numberStyle = .decimal
         
         guard let allMemos = allMemos else { return "0" }
-        let total = numberFormatter.string(from: NSNumber(value: allMemos.count))!
+        let total = numberFormatter.string(for: allMemos.count)!
         
         return total
     }
@@ -183,7 +188,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return section == 0 ? 0 : 2 // 핀데이터 조건에 따른 분기 처리 필요
+        return section == 0 ? 0 : allMemos.count // 핀데이터 조건에 따른 분기 처리 필요
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -193,8 +198,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
             
             return cell
+            
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reusableIdentifier, for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
+            
+            cell.setData(data: allMemos[indexPath.row]) //
             
             return cell
         }
@@ -226,7 +234,21 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
             print(#function)
             completionHandler(true)
-            self.showConfirmToDeleteAlert()
+            
+            let alert = UIAlertController(title: nil , message: "메모가 삭제됩니다. 이 동작은 취소할 수 없습니다.", preferredStyle: .actionSheet)
+            let ok = UIAlertAction(title: "메모 삭제", style: .destructive) { _ in
+                self.repository.fetchRealmDeleteItem(item: self.allMemos[indexPath.row])
+                self.mainView.tableView.reloadData()
+                self.setNavigationBarTitle()
+    
+            }
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            
+            alert.addAction(ok)
+            alert.addAction(cancel)
+            
+            self.present(alert, animated: true)
+            
         }
         
         delete.image = UIImage(systemName: "trash.fill")

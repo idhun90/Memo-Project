@@ -16,7 +16,7 @@ import Realm
  공통 사항
  - 완료 버튼 누르거나, 편집 상태가 끝나거나, 백버튼 액션, 제스처를 통해 이전 화면 이동 시 메모가 저장 됨
  - 어떤 텍스트도 입력되지 않다면 통보 없이 메모 삭제
- - 리턴키를 입력하기 전까지 내용을 제목으로, 나머지 내용은 내용으로 분류 (두 컬럼으로 나눠 저장)
+ - 리턴키를 입력하기 전까지 내용을 제목으로, 나머지 내용은 내용으로 분류 (두 컬럼으로 나눠 저장) (구현)
  - 우측 상단 공유 버튼 클릭 시 메모 텍스트가 UIActivityViewController를 통해 공유됨
  
  */
@@ -36,9 +36,13 @@ class WriteEditViewController: BaseViewController {
         print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
         print("================================================")
         autoShowKeyboard()
-        
     }
-    // 작성 화면 진입 시 키보드 띄움 및 공유, 완료 버튼 보이기
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print(#function)
+    }
+    
+    // 작성 화면 진입 시 키보드 자동 띄움 및 공유, 완료 버튼 보이기
     func autoShowKeyboard() {
         if mainView.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             mainView.textView.becomeFirstResponder()
@@ -56,30 +60,30 @@ class WriteEditViewController: BaseViewController {
     
     override func configureUI() {
         mainView.textView.delegate = self
-    }
-    
-    override func setNavigationBarUI() {
-        print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
         navigationItem.largeTitleDisplayMode = .never
     }
-    
+
     @objc func shareButtonClicked() {
         
     }
     
     @objc func finishButtonClicked() {
         // 데이터 값 저장
-        // 완료 버튼 누를 시 '완료'버튼 히든 처리, 및 키보드 내림
+        // 완료 버튼 누를 시 데이터 저장 및 키보드 내림 (saveTextToRelam을 이곳에 작성하면, DidEndEditing과 중복 호출로 두 번 저장됨)
+        mainView.textView.resignFirstResponder()
+    }
 
+    func saveTextToRealm(text: String!) {
+        
         // 저장 전 줄바꿈 여부 체크
-        guard let originalText = mainView.textView.text else { return }
+        guard let originalText = text else { return }
         
         if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             
-            // 제목 앞에 여러 줄바꿈이 있다면 해당 줄바꿈 제거 후 첫 번째 요소 타이틀로 선정
-            // 애플 메모앱은 테이블뷰 제목 항목에 공백 없는 타이틀이 보이지만, 화면 내용이나 수정 화면으로 보이면 공백도 함께 보여진다. 어떻게 처리한걸까
+            // 제목 앞에 여러 공백 줄바꿈이 있다면 해당 줄바꿈 제거 후 첫 번째 문자열 요소를 타이틀로 선정
+            // 애플 메모앱은 공백으로 줄바꿈을 주고 텍스트를 입력하면 테이블뷰 제목 항목에는 공백이 제거된 타이틀이 보이면서, 수정 화면에서는 공백 줄바꿈이 여전히 함께 보여진다. 어떻게 처리한걸까
+            
             let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
-            // 공백을 제거한 상태에서 타이틀을 제외한 substring 타입의 나머지 요소
             let contentSubstring = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count)
             let content = String(contentSubstring)
             let memo = RealmMemo(realmTitle: title, realmContent: content, realmCreatedDate: Date(), realmEditedDate: nil)
@@ -94,6 +98,7 @@ class WriteEditViewController: BaseViewController {
         } else {
             print("저장할 텍스트 내용이 없습니다.")
         }
+        
     }
 }
 
@@ -113,36 +118,25 @@ extension WriteEditViewController: UITextViewDelegate {
         print("=================================")
         print("줄바꿈 체크:", textView.text.contains("\n"))
         print("=================================")
-        let titleText = textView.text.components(separatedBy: "\n")[0]
-        print("제목: ", titleText)
-        let subTextByDrop = textView.text.dropFirst(titleText.count)
-        print("내용:", subTextByDrop)
-        
-        print("첫 줄 공백", textView.text.components(separatedBy: "\n")[0].isEmpty) // -> 내용이 제목이 되야함.
-        print("공백, 스페이스 제거:", textView.text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0])
-        
-        let resulttitle = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
-        print("공백, 스페이스 제거 내용:", textView.text.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(resulttitle.count))
+        let title = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
+        let content = String(textView.text.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count))
+        print("제목:", title)
+        print("내용:", content)
         
         // 테이블쎌에 보여줄 제목은 공백이 제거된 제목 -> resultTitle
         // 하지만 메모장에 보여줄 때는 공백까지 함께 보여줘야 함. 공백이 포함된 제목
         
         
     }
-    
+
     func textViewDidEndEditing(_ textView: UITextView) {
         print(#function)
         // 백버튼 또는 제스처로 이전 화면 복귀 시 해당 메소드 호출 확인
         // 이 곳에서 데이터 저장 또는 값 전달이 이뤄져야 한다. (공백이 아닐 경우에만)
         
-        if !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            // 값 전달을 해야 합니다.
-            if textView.text.contains("\n") {
-                
-            } else {
-                
-            }
-        }
+        textView.resignFirstResponder()
+        saveTextToRealm(text: textView.text)
+
     }
 }
 

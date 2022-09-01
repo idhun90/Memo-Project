@@ -42,6 +42,12 @@ final class MainTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setData(data: RealmMemo) {
+        titleLabel.text = data.realmTitle
+        dateLabel.text = data.realmEditedDate?.formatted() ?? data.realmCreatedDate.formatted()
+        contentLabel.text = data.realmContent
+    }
+    
     override func configureUI() {
         [titleLabel, stackView].forEach {
             self.contentView.addSubview($0)
