@@ -7,21 +7,18 @@ final class MainTableViewCell: BaseTableViewCell {
     let titleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
         view.configureUI(FontSize: 17, weight: .bold, color: .black)
-        view.text = "테스트sdsafdasfdsfasdf"
         return view
     }()
     
     let dateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
         view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
-        view.text = "8888.88.88 오전 88:88"
         return view
     }()
     
     let contentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
         view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
-        view.text = "가나다라마바사아자차카타파하sfadsfadsfadsfdsa"
         return view
     }()
     

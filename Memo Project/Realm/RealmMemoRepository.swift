@@ -6,11 +6,14 @@ protocol RealmMemoRepositoryType {
     
     func fetchRealmPath() -> URL
     func fetchRealm() -> Results<RealmMemo>
+    func fetchRealmPin() -> Results<RealmMemo>
+    func fetchRealmNoPin() -> Results<RealmMemo>
     func fetchRealmSort(sort: String, ascending: Bool) -> Results<RealmMemo>
     func fetchRealmFilterSearchByText(text: String) -> Results<RealmMemo>
     //    func fetchRealmFilter() -> Results<RealmMemo>
     func fetchRealmAddItem(item: RealmMemo)
     func fetchRealmDeleteItem(item: RealmMemo)
+    func fetchRealmChangePin(item: RealmMemo)
     
 }
 
@@ -24,6 +27,14 @@ class RealmMemoRepository: RealmMemoRepositoryType {
     
     func fetchRealm() -> Results<RealmMemo> {
         return localRealm.objects(RealmMemo.self).sorted(byKeyPath: "realmCreatedDate" , ascending: false)
+    }
+    
+    func fetchRealmPin() -> Results<RealmMemo> {
+        return localRealm.objects(RealmMemo.self).filter("realmPin = true").sorted(byKeyPath: "realmCreatedDate" , ascending: false)
+    }
+    
+    func fetchRealmNoPin() -> Results<RealmMemo> {
+        return localRealm.objects(RealmMemo.self).filter("realmPin = false").sorted(byKeyPath: "realmCreatedDate" , ascending: false)
     }
     
     func fetchRealmSort(sort: String, ascending: Bool) -> Results<RealmMemo> {
@@ -57,6 +68,16 @@ class RealmMemoRepository: RealmMemoRepositoryType {
             }
         } catch let error {
             print("Realm에서 데이터 제거 실패", error)
+        }
+    }
+    func fetchRealmChangePin(item: RealmMemo) {
+        do {
+            try localRealm.write {
+                item.realmPin = !item.realmPin
+                print("Pin값 변환 성공")
+            }
+        } catch let error {
+            print("Pin값 변환 실패", error)
         }
     }
 }

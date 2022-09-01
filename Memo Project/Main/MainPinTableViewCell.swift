@@ -7,21 +7,18 @@ final class MainPinTableViewCell: BaseTableViewCell {
     let pinTitleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
         view.configureUI(FontSize: 17, weight: .bold, color: .black)
-        view.text = "테스트sdsafdasfdsfasdf"
         return view
     }()
     
     let pinDateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
         view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
-        view.text = "8888.88.88 오전 88:88"
         return view
     }()
     
     let pinContentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
         view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
-        view.text = "가나다라마바사아자차카타파하sfadsfadsfadsfdsa"
         return view
     }()
     
@@ -42,10 +39,15 @@ final class MainPinTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setData(data: RealmMemo) {
+        pinTitleLabel.text = data.realmTitle
+        pinDateLabel.text = data.realmEditedDate?.formatted() ?? data.realmCreatedDate.formatted()
+        pinContentLabel.text = data.realmContent
+    }
+    
     override func configureUI() {
         [pinTitleLabel, pinStackView].forEach {
             self.contentView.addSubview($0)
-            self.backgroundColor = .green
         }
     }
     

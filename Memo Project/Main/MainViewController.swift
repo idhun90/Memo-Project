@@ -28,20 +28,20 @@ final class MainViewController: BaseViewController {
             print("========================")
         }
     }
-//    // 메모
-//    var memos: Results<RealmMemo>! {
-//        didSet {
-//            print("memos 변화 발생")
-//            print("========================")
-//        }
-//    }
-//    // 고정된 메모
-//    var pinMemos: Results<RealmMemo>! {
-//        didSet {
-//            print("pinMemos 변화 발생")
-//            print("========================")
-//        }
-//    }
+    // 메모
+    var memos: Results<RealmMemo>! {
+        didSet {
+            print("memos 변화 발생")
+            print("========================")
+        }
+    }
+    // 고정된 메모
+    var pinMemos: Results<RealmMemo>! {
+        didSet {
+            print("pinMemos 변화 발생")
+            print("========================")
+        }
+    }
     
     override func loadView() {
         self.view = mainView
@@ -62,6 +62,14 @@ final class MainViewController: BaseViewController {
         print("================================================")
         
         allMemos = repository.fetchRealm()
+        pinMemos = repository.fetchRealmPin()
+        memos = repository.fetchRealmNoPin()
+        
+        print(allMemos)
+        print(pinMemos)
+        print(memos)
+        
+        
         mainView.tableView.reloadData()
         setNavigationBarTitle()
     }
@@ -114,7 +122,7 @@ final class MainViewController: BaseViewController {
             transition(viewController: vc, transitionStyle: .presentOverFullScreen)
         }
     }
-    
+    // 네비게이션 타이틀 갱신
     func countMemosToTitle() -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
@@ -123,6 +131,23 @@ final class MainViewController: BaseViewController {
         let total = numberFormatter.string(for: allMemos.count)!
         
         return total
+    }
+    
+    // 핀 고정, 해제 메소드
+    func changePin(section: Int, item: RealmMemo) -> UIContextualAction {
+        
+        let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+            print(#function)
+            completionHandler(true)
+            
+            self.repository.fetchRealmChangePin(item: item)
+            self.mainView.tableView.reloadData()
+        }
+        
+        pin.backgroundColor = .systemOrange
+        pin.image = section == 0 ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
+        
+        return pin
     }
     
     func calculate(){
@@ -162,53 +187,42 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    //
-    //        let headerView: UIView = {
-    //           let view = UIView()
-    //            view.backgroundColor = .red
-    //            return view
-    //        }()
-    //
-    //        let headerTitle: UILabel = {
-    //            let view = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-    //            view.text = "테스트"
-    //            view.textColor = .black
-    //            view.font = .systemFont(ofSize: 18, weight: .bold)
-    //            return view
-    //        }()
-    //        headerView.addSubview(headerTitle)
-    //
-    //        return headerView
-    //    }
-    //
-    //    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    //        return 50
-    //    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        switch section {
+        case Section.pinMemos.rawValue:
+            return pinMemos.count
+        case Section.memos.rawValue:
+            return memos.count
+        default:
+            return 0
+        }
 
-        return section == 0 ? 0 : allMemos.count // 핀데이터 조건에 따른 분기 처리 필요
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // 고정 Cell
         if indexPath.section == Section.pinMemos.rawValue {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reusableIdentifier, for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
+            
+            cell.setData(data: pinMemos[indexPath.row])
             
             return cell
             
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reusableIdentifier, for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
             
-            cell.setData(data: allMemos[indexPath.row]) //
+            cell.setData(data: memos[indexPath.row])
             
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let vc = WriteEditViewController()
         self.navigationController?.navigationBar.topItem?.backButtonTitle = "메모"
         transition(viewController: vc, transitionStyle: .push)
@@ -216,21 +230,22 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
-            print(#function)
-            completionHandler(true)
-            // 데이터 처리
+        if indexPath.section == Section.pinMemos.rawValue {
+            let pin = changePin(section: 0, item: pinMemos[indexPath.row])
+            return UISwipeActionsConfiguration(actions: [pin])
+        } else if indexPath.section == Section.memos.rawValue {
+            let pin = changePin(section: 1, item: memos[indexPath.row])
+            return UISwipeActionsConfiguration(actions: [pin])
+        } else {
+            print("핀 스와이프 동작에 문제가 발생했습니다.")
+            return nil
         }
         
-        // 조건문 추가 작성 필요, 고정된 상태 또는 일반 상태일 때 아이콘 표시
-        pin.backgroundColor = .systemOrange
-        pin.image = UIImage(systemName: "pin.fill") // 고정된 상태라면 다른 아이콘 대체
-        
-        return UISwipeActionsConfiguration(actions: [pin])
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        print(indexPath)
         let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
             print(#function)
             completionHandler(true)
