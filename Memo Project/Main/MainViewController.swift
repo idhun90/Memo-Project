@@ -2,26 +2,40 @@ import UIKit
 
 import RealmSwift
 
+enum Section: Int, CaseIterable {
+    case pinMemos
+    case memos
+    
+    var sectionTitle: String {
+        switch self {
+        case .pinMemos:
+            return "고정된 메모"
+        case .memos:
+            return "메모"
+        }
+    }
+}
+
 final class MainViewController: BaseViewController {
     
     private let mainView = MainView()
-    
     let repository = RealmMemoRepository()
     
+    //모든 메모
     var allMemos: Results<RealmMemo>! {
         didSet {
             print("allMemos 변화 발생")
             print("========================")
         }
     }
-    
+    // 메모
     var memos: Results<RealmMemo>! {
         didSet {
             print("memos 변화 발생")
             print("========================")
         }
     }
-    
+    // 고정된 메모
     var pinMemos: Results<RealmMemo>! {
         didSet {
             print("pinMemos 변화 발생")
@@ -35,18 +49,20 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(#function, "호출됨")
-        print("========================")
+        print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
+        print("================================================")
+        print(repository.fetchRealmPath()) // RealmDefaults 경로
         
-        showOnceWalkthroughView()
+        showOnceWalkthroughView() // Walkthrough 화면 호출
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(#function, "호출됨")
-        print("========================")
+        print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
+        print("================================================")
     }
     
+    //MARK: - UI 셋업
     override func configureUI() {
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
@@ -56,7 +72,7 @@ final class MainViewController: BaseViewController {
     }
     
     override func setNavigationBarUI() {
-        navigationItem.title = "개의 메모"
+        navigationItem.title = countMemosToTitle() + "개의 메모"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = false
         navigationController?.navigationBar.tintColor = .ButtonTintColor
@@ -66,9 +82,7 @@ final class MainViewController: BaseViewController {
     }
     
     func setToolBarUI() {
-        
         var barButtonItems: [UIBarButtonItem] = []
-        
         let writeButton = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(writeButtonClicked))
         writeButton.tintColor = .ButtonTintColor
         
@@ -81,16 +95,34 @@ final class MainViewController: BaseViewController {
         self.toolbarItems = barButtonItems
     }
     
+    // 메인 화면 -> 작성 화면
     @objc func writeButtonClicked() {
         let vc = WriteEditViewController()
+        self.navigationController?.navigationBar.topItem?.backButtonTitle = "메모"
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    //MARK: - 메소드
     func showOnceWalkthroughView() {
         if !UserDefaults.standard.bool(forKey: WalkthroughtViewToggle.once) {
             let vc = WalkthroughViewController()
             transition(viewController: vc, transitionStyle: .presentOverFullScreen)
         }
+    }
+    
+    func countMemosToTitle() -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        
+        guard let allMemos = allMemos else { return "0" }
+        let total = numberFormatter.string(from: NSNumber(value: allMemos.count))!
+        
+        return total
+    }
+    
+    func calculate(){
+        // 오늘 작성한 메모
+        
     }
 }
 
@@ -115,7 +147,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? "고정" : "메모"
+        switch section {
+        case Section.pinMemos.rawValue:
+            return Section.pinMemos.sectionTitle // 핀 데이터 조건에 따른 분기 처리 필요.
+        case Section.memos.rawValue:
+            return Section.memos.sectionTitle
+        default:
+            return nil
+        }
     }
     
     //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -143,13 +182,28 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     //    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+
+        return section == 0 ? 0 : 2 // 핀데이터 조건에 따른 분기 처리 필요
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reusableIdentifier, for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
         
-        return cell
+        // 고정 Cell
+        if indexPath.section == Section.pinMemos.rawValue {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
+            
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reusableIdentifier, for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
+            
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = WriteEditViewController()
+        self.navigationController?.navigationBar.topItem?.backButtonTitle = "메모"
+        transition(viewController: vc, transitionStyle: .push)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -160,6 +214,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             // 데이터 처리
         }
         
+        // 조건문 추가 작성 필요, 고정된 상태 또는 일반 상태일 때 아이콘 표시
         pin.backgroundColor = .systemOrange
         pin.image = UIImage(systemName: "pin.fill") // 고정된 상태라면 다른 아이콘 대체
         

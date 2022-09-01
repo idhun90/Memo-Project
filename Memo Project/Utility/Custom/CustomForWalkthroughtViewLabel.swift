@@ -14,5 +14,6 @@ class CustomForWalkthroughtViewLabel: UILabel {
     func configureUI() {
         self.font = .systemFont(ofSize: 22, weight: .bold)
         self.numberOfLines = 2
+        self.textAlignment = .center
     }
 }
