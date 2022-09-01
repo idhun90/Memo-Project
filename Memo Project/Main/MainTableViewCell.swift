@@ -67,6 +67,5 @@ final class MainTableViewCell: BaseTableViewCell {
         }
         
         self.dateLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        
     }
 }
