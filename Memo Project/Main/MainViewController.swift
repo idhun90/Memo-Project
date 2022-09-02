@@ -1,6 +1,7 @@
 import UIKit
 
 import RealmSwift
+import Toast
 
 enum Section: Int, CaseIterable {
     case pinMemos
@@ -71,15 +72,15 @@ final class MainViewController: BaseViewController {
         print("allMemos 갯수:", allMemos.count)
         print("pinMemos 갯수:", pinMemos.count)
         print("memos 갯수:", memos.count)
-//        print("================================================")
-//        print(allMemos!)
-//        print("================================================")
-//        print(pinMemos!)
-//        print("================================================")
-//        print(memos!)
-//        print("================================================")
+        //        print("================================================")
+        //        print(allMemos!)
+        //        print("================================================")
+        //        print(pinMemos!)
+        //        print("================================================")
+        //        print(memos!)
+        //        print("================================================")
         
-    
+        
         
         // 작성 화면에서 제스처 또는 백버튼으로 화면 전환 과정에서 viewWillAppear 선 호출 -> textViewDidEndEditing이 호출된다.
         // 따라서 이 곳에서 데이터 또는 tableView 리로딩은 반영이 안 되는 문제가 있었다.
@@ -159,9 +160,9 @@ final class MainViewController: BaseViewController {
     
     // 핀 고정, 해제 메소드
     func changePin(section: Int, item: RealmMemo) -> UIContextualAction {
-        
+
         let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
-            print(#function)
+            print(#function, "실행되었나?")
             completionHandler(true)
             
             self.repository.fetchRealmChangePin(item: item)
@@ -279,13 +280,36 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        print(#function)
         
         if indexPath.section == Section.pinMemos.rawValue {
+            
             let pin = changePin(section: 0, item: pinMemos[indexPath.row])
             return UISwipeActionsConfiguration(actions: [pin])
+            
         } else if indexPath.section == Section.memos.rawValue {
-            let pin = changePin(section: 1, item: memos[indexPath.row])
-            return UISwipeActionsConfiguration(actions: [pin])
+            
+            if pinMemos.count <= 4 {
+                
+                let pin = changePin(section: 1, item: memos[indexPath.row])
+                return UISwipeActionsConfiguration(actions: [pin])
+                
+            } else {
+                
+                let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+                    completionHandler(true)
+                }
+                
+                pin.backgroundColor = .systemOrange
+                pin.image = UIImage(systemName: "pin.fill")
+                
+                var style = ToastStyle()
+                style.backgroundColor = .ButtonTintColor
+                self.mainView.makeToast("최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center, style: style)
+                
+                return UISwipeActionsConfiguration(actions: [pin])
+            }
+            
         } else {
             print("핀 스와이프 동작에 문제가 발생했습니다.")
             return nil

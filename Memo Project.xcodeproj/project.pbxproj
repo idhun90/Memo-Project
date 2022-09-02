@@ -36,6 +36,7 @@
 		1473130F28BFB6B600BD5105 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1473130E28BFB6B600BD5105 /* RealmSwift */; };
 		1473131228BFC1E600BD5105 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473131128BFC1E600BD5105 /* RealmModel.swift */; };
 		1473131428BFC58F00BD5105 /* RealmMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473131328BFC58F00BD5105 /* RealmMemoRepository.swift */; };
+		1478455328C1E3A9004DC07F /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 1478455228C1E3A9004DC07F /* Toast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1478455328C1E3A9004DC07F /* Toast in Frameworks */,
 				1473130F28BFB6B600BD5105 /* RealmSwift in Frameworks */,
 				1473130D28BFB6B600BD5105 /* Realm in Frameworks */,
 				14049DAF28BF1DE500495E0A /* SnapKit in Frameworks */,
@@ -233,6 +235,7 @@
 				14049DAE28BF1DE500495E0A /* SnapKit */,
 				1473130C28BFB6B600BD5105 /* Realm */,
 				1473130E28BFB6B600BD5105 /* RealmSwift */,
+				1478455228C1E3A9004DC07F /* Toast */,
 			);
 			productName = "Memo Project";
 			productReference = 14049D9428BF1A7500495E0A /* Memo Project.app */;
@@ -265,6 +268,7 @@
 			packageReferences = (
 				14049DAD28BF1DE500495E0A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				1473130B28BFB6B600BD5105 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				1478455128C1E3A9004DC07F /* XCRemoteSwiftPackageReference "Toast-Swift" */,
 			);
 			productRefGroup = 14049D9528BF1A7500495E0A /* Products */;
 			projectDirPath = "";
@@ -551,6 +555,14 @@
 				minimumVersion = 10.28.6;
 			};
 		};
+		1478455128C1E3A9004DC07F /* XCRemoteSwiftPackageReference "Toast-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scalessec/Toast-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -568,6 +580,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1473130B28BFB6B600BD5105 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		1478455228C1E3A9004DC07F /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1478455128C1E3A9004DC07F /* XCRemoteSwiftPackageReference "Toast-Swift" */;
+			productName = Toast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
