@@ -3,6 +3,21 @@ import UIKit
 import RealmSwift
 import Toast
 
+/*
+ 요구 사항
+ - 최초 앱을 실행할 경우 팝업 화면을 띄워줍니다. 최초 1회만 뜹니다. (구현)
+ - 총 작성된 메모 갯수가 네비게이션 타이틀에 보여지며, 1000개가 넘을 경우, 3자리마다 콤마 표기 (구현)
+ - 최신 순으로 정렬 (구현)
+ - 메모 최대 5개 최신순으로 정렬 고정, 5개가 초과일 경우 토스트로 공지 (구현)
+ - 고정된 메모는 별도 섹션 관리 및 고정된 메모가 없다면 세션을 표기하지 않음. (구현) (세션 타이틀은 남아있음..)
+ - Leading Swipe 고정 또는 해제 (구현)
+ - Trailing Swipe 메모 삭제 구현 및 삭제 전 삭제 여부 확인 (구현)
+ - 날짜 포멧 형태
+   : 오늘 작성한 메모는 오전 08:19 형태 표기
+   : 이번 주 작성한 메모는 일요일, 화요일 형태 표기
+   : 그 외 기간 작성된 메모는 2021.10.12 오후 02:22 형태 표기
+ */
+
 enum Section: Int, CaseIterable {
     case pinMemos
     case memos
@@ -72,13 +87,13 @@ final class MainViewController: BaseViewController {
         print("allMemos 갯수:", allMemos.count)
         print("pinMemos 갯수:", pinMemos.count)
         print("memos 갯수:", memos.count)
-        //        print("================================================")
-        //        print(allMemos!)
-        //        print("================================================")
-        //        print(pinMemos!)
-        //        print("================================================")
-        //        print(memos!)
-        //        print("================================================")
+                print("================================================")
+                print(allMemos!)
+                print("================================================")
+                print(pinMemos!)
+                print("================================================")
+                print(memos!)
+                print("================================================")
         
         
         
@@ -162,7 +177,6 @@ final class MainViewController: BaseViewController {
     func changePin(section: Int, item: RealmMemo) -> UIContextualAction {
 
         let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
-            print(#function, "실행되었나?")
             completionHandler(true)
             
             self.repository.fetchRealmChangePin(item: item)
@@ -326,7 +340,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             let delete = deleteCell(section: 1, item: memos[indexPath.row])
             return UISwipeActionsConfiguration(actions: [delete])
         } else {
-            print("제거 스와이프 동작에 문제가 발생했습니다.")
+            print("삭제 과정에서 문제가 발생했습니다.")
             return nil
         }
     }

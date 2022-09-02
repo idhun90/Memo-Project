@@ -41,7 +41,8 @@ final class MainPinTableViewCell: BaseTableViewCell {
     
     func setData(data: RealmMemo) {
         pinTitleLabel.text = data.realmTitle
-        pinDateLabel.text = data.realmEditedDate?.formatted() ?? data.realmCreatedDate.formatted()
+        pinDateLabel.text = calculateDateFormat(date: data.realmEditedDate ?? data.realmCreatedDate)
+        //data.realmEditedDate?.formatted() ?? data.realmCreatedDate.formatted()
         pinContentLabel.text = data.realmContent
     }
     
@@ -64,7 +65,7 @@ final class MainPinTableViewCell: BaseTableViewCell {
         pinStackView.snp.makeConstraints {
             $0.top.equalTo(pinTitleLabel.snp.bottom)
             $0.leading.equalTo(self.contentView.snp.leading).offset(spacing)
-            $0.trailing.equalTo(self.contentView.snp.trailing).offset(-spacing)
+            $0.trailing.lessThanOrEqualTo(self.contentView.snp.trailing).offset(-spacing)
             $0.bottom.equalTo(self.contentView.snp.bottom).offset(-5)
             $0.height.equalTo(25)
         }

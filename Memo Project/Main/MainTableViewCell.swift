@@ -41,7 +41,7 @@ final class MainTableViewCell: BaseTableViewCell {
     
     func setData(data: RealmMemo) {
         titleLabel.text = data.realmTitle
-        dateLabel.text = data.realmEditedDate?.formatted() ?? data.realmCreatedDate.formatted()
+        dateLabel.text = calculateDateFormat(date: data.realmEditedDate ?? data.realmCreatedDate)
         contentLabel.text = data.realmContent
     }
     
@@ -64,7 +64,7 @@ final class MainTableViewCell: BaseTableViewCell {
         stackView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom)
             $0.leading.equalTo(self.contentView.snp.leading).offset(spacing)
-            $0.trailing.equalTo(self.contentView.snp.trailing).offset(-spacing)
+            $0.trailing.lessThanOrEqualTo(self.contentView.snp.trailing).offset(-spacing)
             $0.bottom.equalTo(self.contentView.snp.bottom).offset(-5)
             $0.height.equalTo(25)
         }

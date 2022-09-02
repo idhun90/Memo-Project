@@ -4,7 +4,7 @@ import Realm
 
 /*
  
- 작성/수정 화면
+ 요구사항
  작성 화면
  - 진입 시 자동으롤 키보드 띄워줌 (becomeFirstResponder) (구현)
  - 키보드 내려가지 않음
@@ -97,7 +97,7 @@ class WriteEditViewController: BaseViewController {
             // 애플 메모앱은 공백으로 줄바꿈을 주고 텍스트 준 상태에서도 테이블뷰 제목 항목은 공백이 제거된 타이틀이 보이면서, 수정 화면에서는 공백 줄바꿈이 여전히 함께 보여진다. 어떻게 처리한걸까
             
             let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
-            let contentSubstring = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count)
+            let contentSubstring = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines)
             let content = String(contentSubstring)
             let memo = RealmMemo(realmTitle: title, realmContent: content, realmCreatedDate: Date(), realmEditedDate: nil)
             repository.fetchRealmAddItem(item: memo)
@@ -131,7 +131,7 @@ extension WriteEditViewController: UITextViewDelegate {
         print("줄바꿈 체크:", textView.text.contains("\n"))
         print("=================================")
         let title = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
-        let content = String(textView.text.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count))
+        let content = String(textView.text.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count)).trimmingCharacters(in: .whitespacesAndNewlines)
         print("제목:", title)
         print("내용:", content)
         
