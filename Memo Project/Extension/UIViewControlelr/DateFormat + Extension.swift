@@ -19,21 +19,21 @@ extension UITableViewCell {
         
         if someday == today {
             //오늘 작성한 메모
-            print(dateFormatTodayOrThisWeek(date: date, dateStyle: .none, timeStyle: .short))
-            return dateFormatTodayOrThisWeek(date: date, dateStyle: .none, timeStyle: .short)
+            print(dateFormatTodayOrTheOthers(date: date, dateStyle: .none, timeStyle: .short))
+            return dateFormatTodayOrTheOthers(date: date, dateStyle: .none, timeStyle: .short)
         } else if someday != today && thisMonth == someMonth && weekdayOrdinalToday == weekdayOrdinalSomeday {
             // 이번 주 작성한 메모
-            print(dateFormatTodayOrThisWeek(date: date, dateStyle: .medium, timeStyle: .short))
-            return dateFormatTodayOrThisWeek(date: date, dateStyle: .medium, timeStyle: .short)
+            print(dateFormatThisWeek(date: date))
+            return dateFormatThisWeek(date: date)
         } else {
             // 그외 기간 작성한 메모
-            print(dateFormatAnotherDay(date: date))
-            return dateFormatAnotherDay(date: date)
+            print(dateFormatTodayOrTheOthers(date: date, dateStyle: .medium, timeStyle: .short))
+            return dateFormatTodayOrTheOthers(date: date, dateStyle: .medium, timeStyle: .short)
         }
     }
     
-    // 오늘 작성 메모 형식 또는 이번 주 작성 메모 형식
-    func dateFormatTodayOrThisWeek(date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
+    // 오늘 작성 메모 형식 또는 그 외 기간에 작성한 메모 형식
+    func dateFormatTodayOrTheOthers(date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = dateStyle
         dateFormatter.timeStyle = timeStyle
@@ -42,8 +42,8 @@ extension UITableViewCell {
         
         return dateFormatter.string(from: date)
     }
-    // 그 외 기간 작성 메모 형식
-    func dateFormatAnotherDay(date: Date) -> String {
+    // 이번 주 작성 메모 형식
+    func dateFormatThisWeek(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
         dateFormatter.locale = Locale(identifier: "Ko_KR")
@@ -54,7 +54,8 @@ extension UITableViewCell {
 }
 
 // 오늘 형태: dateStyle .none, timeStyle .short
-// 이번 주 형태: dateStyle .medium, timeStyle .short
+// 이번 주 형태: "EEEE"
+// 나머지 날짜 형태: dateStyle .medium, timeStyle .short
 
 // 오늘 작성 메모: date == Date()
 // 이번 주 작성한 메모: date != Date(), 이번 주에 포함되면 됨
