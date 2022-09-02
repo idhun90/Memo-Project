@@ -39,7 +39,20 @@ class WriteEditViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print(#function)
+        super.viewWillAppear(animated)
+        print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
+        print("================================================")
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
+        print("================================================")
+        
+        mainView.textView.resignFirstResponder()
+        saveTextToRealm(text: mainView.textView.text)
+        
     }
     
     // 작성 화면 진입 시 키보드 자동 띄움 및 공유, 완료 버튼 보이기
@@ -62,7 +75,7 @@ class WriteEditViewController: BaseViewController {
         mainView.textView.delegate = self
         navigationItem.largeTitleDisplayMode = .never
     }
-
+    
     @objc func shareButtonClicked() {
         
     }
@@ -72,7 +85,7 @@ class WriteEditViewController: BaseViewController {
         // 완료 버튼 누를 시 데이터 저장 및 키보드 내림 (saveTextToRelam을 이곳에 작성하면, DidEndEditing과 중복 호출로 두 번 저장됨)
         mainView.textView.resignFirstResponder()
     }
-
+    
     func saveTextToRealm(text: String!) {
         
         // 저장 전 줄바꿈 여부 체크
@@ -81,7 +94,7 @@ class WriteEditViewController: BaseViewController {
         if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             
             // 제목 앞에 여러 공백 줄바꿈이 있다면 해당 줄바꿈 제거 후 첫 번째 문자열 요소를 타이틀로 선정
-            // 애플 메모앱은 공백으로 줄바꿈을 주고 텍스트를 입력하면 테이블뷰 제목 항목에는 공백이 제거된 타이틀이 보이면서, 수정 화면에서는 공백 줄바꿈이 여전히 함께 보여진다. 어떻게 처리한걸까
+            // 애플 메모앱은 공백으로 줄바꿈을 주고 텍스트 준 상태에서도 테이블뷰 제목 항목은 공백이 제거된 타이틀이 보이면서, 수정 화면에서는 공백 줄바꿈이 여전히 함께 보여진다. 어떻게 처리한걸까
             
             let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
             let contentSubstring = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count)
@@ -109,7 +122,6 @@ extension WriteEditViewController: UITextViewDelegate {
         showRightBarButtonItems()
     }
     
-    // 공유, 완료 버튼
     func textViewDidChange(_ textView: UITextView) {
         print(#function)
         print("공백 체크: ", textView.text.isEmpty)
@@ -128,15 +140,15 @@ extension WriteEditViewController: UITextViewDelegate {
         
         
     }
-
+    
     func textViewDidEndEditing(_ textView: UITextView) {
         print(#function)
         // 백버튼 또는 제스처로 이전 화면 복귀 시 해당 메소드 호출 확인
         // 이 곳에서 데이터 저장 또는 값 전달이 이뤄져야 한다. (공백이 아닐 경우에만)
         
-        textView.resignFirstResponder()
-        saveTextToRealm(text: textView.text)
-
+        //        textView.resignFirstResponder()
+        //        saveTextToRealm(text: textView.text)
+        
     }
 }
 

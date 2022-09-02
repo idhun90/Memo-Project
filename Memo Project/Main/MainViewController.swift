@@ -65,13 +65,37 @@ final class MainViewController: BaseViewController {
         pinMemos = repository.fetchRealmPin()
         memos = repository.fetchRealmNoPin()
         
-        print(allMemos)
-        print(pinMemos)
-        print(memos)
-        
-        
         mainView.tableView.reloadData()
         setNavigationBarTitle()
+        
+        print("allMemos 갯수:", allMemos.count)
+        print("pinMemos 갯수:", pinMemos.count)
+        print("memos 갯수:", memos.count)
+//        print("================================================")
+//        print(allMemos!)
+//        print("================================================")
+//        print(pinMemos!)
+//        print("================================================")
+//        print(memos!)
+//        print("================================================")
+        
+    
+        
+        // 작성 화면에서 제스처 또는 백버튼으로 화면 전환 과정에서 viewWillAppear 선 호출 -> textViewDidEndEditing이 호출된다.
+        // 따라서 이 곳에서 데이터 또는 tableView 리로딩은 반영이 안 되는 문제가 있었다.
+        // 1. 화면 전환이 완전히 종료된 시점 viewDidAppear에서 데이터를 반영하는 것을 선택함. -> 반응이 느리다.
+        // 2. 작성 화면 viewWillDisAppear에 데이터를 Realm 저장 및 키보드 내리기 기능 추가 -> 여전히 화면 전환 왔다갔다할 때 계속 메모가 추가되는 것을 확인
+        
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
+        print("================================================")
+        
+        
+        // 리로딩 여기서 테스트하기. 제스처 유지한채로 왔다갔다하면 중복 현상 발생
     }
     
     //MARK: - UI 셋업
@@ -150,6 +174,33 @@ final class MainViewController: BaseViewController {
         return pin
     }
     
+    func deleteCell(section: Int, item: RealmMemo) -> UIContextualAction {
+        
+        let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
+            completionHandler(true)
+            
+            let alert = UIAlertController(title: nil , message: "메모가 삭제됩니다. 이 동작은 취소할 수 없습니다.", preferredStyle: .actionSheet)
+            
+            let ok = UIAlertAction(title: "메모 삭제", style: .destructive) { _ in
+                self.repository.fetchRealmDeleteItem(item: item)
+                self.mainView.tableView.reloadData()
+                self.setNavigationBarTitle()
+            }
+            
+            let cancel = UIAlertAction(title: "취소", style: .cancel)
+            
+            alert.addAction(ok)
+            alert.addAction(cancel)
+            
+            self.present(alert, animated: true)
+            
+        }
+        
+        delete.image = UIImage(systemName: "trash.fill")
+        
+        return delete
+    }
+    
     func calculate(){
         // 오늘 작성한 메모
         
@@ -177,6 +228,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
         switch section {
         case Section.pinMemos.rawValue:
             return Section.pinMemos.sectionTitle // 핀 데이터 조건에 따른 분기 처리 필요.
@@ -197,16 +249,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             return 0
         }
-
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // 고정 Cell
         if indexPath.section == Section.pinMemos.rawValue {
-//            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
-            
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reusableIdentifier, for: indexPath) as? MainTableViewCell else { return UITableViewCell() }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
             
             cell.setData(data: pinMemos[indexPath.row])
             
@@ -245,29 +295,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        print(indexPath)
-        let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
-            print(#function)
-            completionHandler(true)
-            
-            let alert = UIAlertController(title: nil , message: "메모가 삭제됩니다. 이 동작은 취소할 수 없습니다.", preferredStyle: .actionSheet)
-            let ok = UIAlertAction(title: "메모 삭제", style: .destructive) { _ in
-                self.repository.fetchRealmDeleteItem(item: self.allMemos[indexPath.row])
-                self.mainView.tableView.reloadData()
-                self.setNavigationBarTitle()
-    
-            }
-            let cancel = UIAlertAction(title: "취소", style: .cancel)
-            
-            alert.addAction(ok)
-            alert.addAction(cancel)
-            
-            self.present(alert, animated: true)
-            
+        if indexPath.section == Section.pinMemos.rawValue {
+            let delete = deleteCell(section: 0, item: pinMemos[indexPath.row])
+            return UISwipeActionsConfiguration(actions: [delete])
+        } else if indexPath.section == Section.memos.rawValue {
+            let delete = deleteCell(section: 1, item: memos[indexPath.row])
+            return UISwipeActionsConfiguration(actions: [delete])
+        } else {
+            print("제거 스와이프 동작에 문제가 발생했습니다.")
+            return nil
         }
-        
-        delete.image = UIImage(systemName: "trash.fill")
-        
-        return UISwipeActionsConfiguration(actions: [delete])
     }
 }
