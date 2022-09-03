@@ -4,7 +4,7 @@ import SnapKit
 
 final class MainView: BaseView {
     
-    let searchBar: UISearchController = {
+    let searchController: UISearchController = {
        let view = UISearchController(searchResultsController: nil)
         view.searchBar.placeholder = "검색"
         view.searchBar.setValue("취소", forKey: "cancelButtonText")
@@ -15,7 +15,9 @@ final class MainView: BaseView {
         let view = UITableView(frame: .zero, style: .insetGrouped)
         view.register(MainPinTableViewCell.self, forCellReuseIdentifier: MainPinTableViewCell.reusableIdentifier)
         view.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.reusableIdentifier)
+        view.register(MainSearchTableViewCell.self, forCellReuseIdentifier: MainSearchTableViewCell.reusableIdentifier)
         view.backgroundColor = .CustomBackgroundColorForView
+        view.keyboardDismissMode = .onDrag
         return view
     }()
     

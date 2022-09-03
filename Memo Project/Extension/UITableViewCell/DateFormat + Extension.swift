@@ -1,27 +1,27 @@
 import UIKit
 
 /*
-형태
-- 오늘: dateStyle .none, timeStyle .short
-- 이번 주: "EEEE"
-- 나머지: dateStyle .medium, timeStyle .short
-
+ -> 작업 시간 4시간
+ 형태
+ - 오늘: dateStyle .none, timeStyle .short
+ - 이번 주: "EEEE"
+ - 나머지: dateStyle .medium, timeStyle .short
+ 
  조건
-- 오늘: date == Date()
-- 이번 주: date != Date(), 같은 월 같은 주
-- 나머지: date != Date(), 같은 월 같은 주가 아니면
-*/
-
+ - 오늘: date == Date()
+ - 이번 주: date != Date(), 같은 월 같은 주
+ - 나머지: date != Date(), 같은 월 같은 주가 아니면
+ */
 
 extension UITableViewCell {
     
     func calculateDateFormat(date: Date) -> String {
-
+        
         let calendar = Calendar.current
         // 일자 계산
         let today = calendar.startOfDay(for: Date())
         let someday = calendar.startOfDay(for: date)
-
+        
         // 월 계산
         let thisMonth = calendar.component(.month, from: today)
         let someMonth = calendar.component(.month, from: someday)

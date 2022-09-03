@@ -42,7 +42,7 @@ class RealmMemoRepository: RealmMemoRepositoryType {
     }
     
     func fetchRealmFilterSearchByText(text: String) -> Results<RealmMemo> {
-        return localRealm.objects(RealmMemo.self).filter("title CONTAINS[c] '\(text)' OR content CONTAINS[c] '\(text)'").sorted(byKeyPath: "realmCreatedDate", ascending: false)
+        return localRealm.objects(RealmMemo.self).filter("realmTitle CONTAINS[c] '\(text)' OR realmContent CONTAINS[c] '\(text)'").sorted(byKeyPath: "realmCreatedDate", ascending: false)
     }
     
     //    func fetchRealmFilter() -> Results<RealmMemo> {

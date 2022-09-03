@@ -38,6 +38,7 @@
 		1473131428BFC58F00BD5105 /* RealmMemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1473131328BFC58F00BD5105 /* RealmMemoRepository.swift */; };
 		1478455328C1E3A9004DC07F /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 1478455228C1E3A9004DC07F /* Toast */; };
 		1478455528C1EF2E004DC07F /* DateFormat + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478455428C1EF2E004DC07F /* DateFormat + Extension.swift */; };
+		1478455828C26CEF004DC07F /* MainSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478455728C26CEF004DC07F /* MainSearchTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		1473131128BFC1E600BD5105 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
 		1473131328BFC58F00BD5105 /* RealmMemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmMemoRepository.swift; sourceTree = "<group>"; };
 		1478455428C1EF2E004DC07F /* DateFormat + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormat + Extension.swift"; sourceTree = "<group>"; };
+		1478455728C26CEF004DC07F /* MainSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSearchTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 			children = (
 				14049DC028BF297200495E0A /* MainViewController.swift */,
 				14049DBE28BF239E00495E0A /* MainView.swift */,
+				1478455728C26CEF004DC07F /* MainSearchTableViewCell.swift */,
 				142E32BF28C0B84900606C17 /* MainPinTableViewCell.swift */,
 				14049DC228BF2A1A00495E0A /* MainTableViewCell.swift */,
 			);
@@ -313,6 +316,7 @@
 				1478455528C1EF2E004DC07F /* DateFormat + Extension.swift in Sources */,
 				1473131228BFC1E600BD5105 /* RealmModel.swift in Sources */,
 				14049D9C28BF1A7500495E0A /* ViewController.swift in Sources */,
+				1478455828C26CEF004DC07F /* MainSearchTableViewCell.swift in Sources */,
 				1473130728BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift in Sources */,
 				14049DC328BF2A1A00495E0A /* MainTableViewCell.swift in Sources */,
 				14049DBF28BF239E00495E0A /* MainView.swift in Sources */,
@@ -478,6 +482,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7CR6X9MD8C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Memo Project/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -506,6 +511,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7CR6X9MD8C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Memo Project/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
