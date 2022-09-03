@@ -24,7 +24,7 @@ import Toast
  : 검색 결과를 스크롤하거나 키보드의 검색 버튼을 누르면 키보드가 내려간다. (구현)
  : 검색 결과 갯수를 섹션에 보여준다.(구현, 큰 섹션은 아직..)
  - 검색한 키워드의 해당 단어 텍스트 컬러 변경
- - 메모 고정, 삭제 기능도 검색 화면에서 구현
+ - 메모 고정, 삭제 기능도 검색 화면에서 구현 (구현)
  - 셀을 클릭하면 메모 수정 화면으로 전환 -> 그리고 수정 화면에서 백버튼 클릭 시 검색화면으로 다시 돌아옴.
  */
 
@@ -86,6 +86,10 @@ final class MainViewController: BaseViewController {
         print(repository.fetchRealmPath()) // RealmDefaults 경로
         
         showOnceWalkthroughView()
+        
+        allMemos = repository.fetchRealm()
+        pinMemos = repository.fetchRealmPin()
+        memos = repository.fetchRealmNoPin()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -93,9 +97,9 @@ final class MainViewController: BaseViewController {
         print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
         print("================================================")
         
-        allMemos = repository.fetchRealm()
-        pinMemos = repository.fetchRealmPin()
-        memos = repository.fetchRealmNoPin()
+        //        allMemos = repository.fetchRealm()
+        //        pinMemos = repository.fetchRealmPin()
+        //        memos = repository.fetchRealmNoPin()
         
         mainView.tableView.reloadData()
         setNavigationBarTitle()
@@ -105,8 +109,8 @@ final class MainViewController: BaseViewController {
         print("memos 갯수:", memos.count)
         print(self.mainView.searchController.isActive)
         print("================================================")
-
-
+        
+        
         // 작성 화면에서 제스처 또는 백버튼으로 화면 전환 과정에서 viewWillAppear 선 호출 -> textViewDidEndEditing이 호출된다.
         // 따라서 이 곳에서 데이터 또는 tableView 리로딩은 반영이 안 되는 문제가 있었다.
         // 1. 화면 전환이 완전히 종료된 시점 viewDidAppear에서 데이터를 반영하는 것을 선택함. -> 반응이 느리다.
@@ -190,10 +194,20 @@ final class MainViewController: BaseViewController {
             
             self.repository.fetchRealmChangePin(item: item)
             self.mainView.tableView.reloadData()
+            
         }
         
         pin.backgroundColor = .ButtonTintColor
-        pin.image = section == 0 ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
+        
+        if searchControllerIsActive {
+            
+            pin.image = item.realmPin ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
+            
+        } else {
+            
+            pin.image = section == 0 ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
+            
+        }
         
         return pin
     }
@@ -229,26 +243,26 @@ final class MainViewController: BaseViewController {
 //MARK: - extension UISearchBarDelegate
 
 extension MainViewController: UISearchBarDelegate {
-
-//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        //searchController.becomeFirstResponder()
-////        self.mainView.tableView.reloadData()
-//        print("테스트")
-////        print(searchController.becomeFirstResponder())
-//    }
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        searchBar.resignFirstResponder()
-//        print(self.mainView.searchController.isActive)
-//    }
-//
-//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        print("작동됨")
-//        print(self.mainView.searchController.isActive) // 왜 비활성화가 안되지?
-//        self.mainView.searchController.isActive = false
-//        self.mainView.tableView.reloadData()
-//    }
-
+    
+    //    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    //        //searchController.becomeFirstResponder()
+    ////        self.mainView.tableView.reloadData()
+    //        print("테스트")
+    ////        print(searchController.becomeFirstResponder())
+    //    }
+    //
+    //    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    //        searchBar.resignFirstResponder()
+    //        print(self.mainView.searchController.isActive)
+    //    }
+    //
+    //    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    //        print("작동됨")
+    //        print(self.mainView.searchController.isActive) // 왜 비활성화가 안되지?
+    //        self.mainView.searchController.isActive = false
+    //        self.mainView.tableView.reloadData()
+    //    }
+    
 }
 
 //MARK: - extension UISearchResultsUpdating
@@ -257,13 +271,13 @@ extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         print("입력된 단어: \(searchController.searchBar.text!)")
         guard let searchedText = searchController.searchBar.text else { return }
-            let searchedItems = repository.fetchRealmFilterSearchByText(text: searchedText.trimmingCharacters(in: .whitespacesAndNewlines))
-            searchedMemos = searchedItems
-            //print(searchedMemos!)
+        let searchedItems = repository.fetchRealmFilterSearchByText(text: searchedText.trimmingCharacters(in: .whitespacesAndNewlines))
+        searchedMemos = searchedItems
+        //print(searchedMemos!)
         print("searchedMemos 갯수:", searchedMemos.count)
         print(searchControllerIsActive)
         
-            mainView.tableView.reloadData()
+        mainView.tableView.reloadData()
     }
 }
 
@@ -318,7 +332,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-// 하나의 cell 파일로 작업했을 때 재사용 문제가 발생했었다.(예:배경색이 달랐을 때)
+        // 하나의 cell 파일로 작업했을 때 재사용 문제가 발생했었다.(예:배경색이 달랐을 때)
         if self.searchControllerIsActive {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainSearchTableViewCell.reusableIdentifier, for: indexPath) as? MainSearchTableViewCell else { return UITableViewCell() }
             
@@ -328,7 +342,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             
         } else {
             if indexPath.section == Section.firstSection.rawValue {
-
+                
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: MainPinTableViewCell.reusableIdentifier, for: indexPath) as? MainPinTableViewCell else { return UITableViewCell() }
                 
                 
@@ -359,7 +373,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == Section.firstSection.rawValue {
             
-            let pin = changePin(section: 0, item: pinMemos[indexPath.row])
+            let pin = searchControllerIsActive ? changePin(section: 0, item: searchedMemos[indexPath.row]) : changePin(section: 0, item: pinMemos[indexPath.row])
             return UISwipeActionsConfiguration(actions: [pin])
             
         } else if indexPath.section == Section.secondSection.rawValue {
@@ -389,18 +403,22 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             print("핀 스와이프 동작에 문제가 발생했습니다.")
             return nil
         }
-        
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         if indexPath.section == Section.firstSection.rawValue {
-            let delete = deleteCell(section: 0, item: pinMemos[indexPath.row])
+            
+            let delete = searchControllerIsActive ? deleteCell(section: 0, item: searchedMemos[indexPath.row]) : deleteCell(section: 0, item: pinMemos[indexPath.row])
             return UISwipeActionsConfiguration(actions: [delete])
+            
         } else if indexPath.section == Section.secondSection.rawValue {
+            
             let delete = deleteCell(section: 1, item: memos[indexPath.row])
             return UISwipeActionsConfiguration(actions: [delete])
+            
         } else {
+            
             print("삭제 과정에서 문제가 발생했습니다.")
             return nil
         }

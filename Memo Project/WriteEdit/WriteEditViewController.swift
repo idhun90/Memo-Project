@@ -81,7 +81,6 @@ class WriteEditViewController: BaseViewController {
     }
     
     @objc func finishButtonClicked() {
-        // 데이터 값 저장
         // 완료 버튼 누를 시 데이터 저장 및 키보드 내림 (saveTextToRelam을 이곳에 작성하면, DidEndEditing과 중복 호출로 두 번 저장됨)
         self.mainView.textView.resignFirstResponder()
     }
