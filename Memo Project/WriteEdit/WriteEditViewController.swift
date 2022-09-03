@@ -26,6 +26,7 @@ class WriteEditViewController: BaseViewController {
     let mainView = WriteEditView()
     
     let repository = RealmMemoRepository()
+    var receiveMemo: RealmMemo?
     
     override func loadView() {
         self.view = mainView
@@ -35,7 +36,9 @@ class WriteEditViewController: BaseViewController {
         super.viewDidLoad()
         print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
         print("================================================")
+        loadMemoData()
         autoShowKeyboard()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,9 +58,18 @@ class WriteEditViewController: BaseViewController {
         
     }
     
+    func loadMemoData() {
+        guard let receiveMemo = receiveMemo else {
+            print("데이터가 존재하지 않습니다.")
+            return
+        }
+        
+        self.mainView.textView.text = receiveMemo.realmContent == nil ? receiveMemo.realmTitle : receiveMemo.realmTitle + "\n" + (receiveMemo.realmContent!)
+    }
+    
     // 작성 화면 진입 시 키보드 자동 띄움 및 공유, 완료 버튼 보이기
     func autoShowKeyboard() {
-        if mainView.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if receiveMemo == nil {
             mainView.textView.becomeFirstResponder()
             showRightBarButtonItems()
         }

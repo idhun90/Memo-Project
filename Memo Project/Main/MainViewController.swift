@@ -23,7 +23,7 @@ import Toast
  : 입력하는 텍스트가 변경될 때 마다 검색이 이루어진다. (구현)
  : 검색 결과를 스크롤하거나 키보드의 검색 버튼을 누르면 키보드가 내려간다. (구현)
  : 검색 결과 갯수를 섹션에 보여준다.(구현, 큰 섹션은 아직..)
- - 검색한 키워드의 해당 단어 텍스트 컬러 변경
+ - 검색한 키워드의 해당 단어 텍스트 컬러 변경 (구현)
  - 메모 고정, 삭제 기능도 검색 화면에서 구현 (구현)
  - 셀을 클릭하면 메모 수정 화면으로 전환 -> 그리고 수정 화면에서 백버튼 클릭 시 검색화면으로 다시 돌아옴.
  */
@@ -72,7 +72,10 @@ final class MainViewController: BaseViewController {
     var searchedMemos: Results<RealmMemo>!
     
     var searchControllerIsActive: Bool {
-        return self.mainView.searchController.isActive
+        
+        // return self.mainView.searchController.isActive && !self.mainView.searchController.searchBar.text!.isEmpty // 기존 Cell이 다 보임. 검색어 입력 전까지 false 상태이기 때문에 (기록용)
+        return self.mainView.searchController.isActive // 검색 화면 눌렀을 때 Cell이 하나도 안 보여주게 구현하고 싶음.
+        
     }
     
     override func loadView() {
@@ -188,7 +191,7 @@ final class MainViewController: BaseViewController {
     }
     
     // 핀 고정, 해제 메소드
-    func changePin(section: Int, item: RealmMemo) -> UIContextualAction {
+    func togglePin(section: Int, item: RealmMemo) -> UIContextualAction {
         
         let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
             completionHandler(true)
@@ -352,6 +355,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = WriteEditViewController()
+        
+        if searchControllerIsActive {
+            vc.receiveMemo = searchedMemos[indexPath.row]
+        } else if indexPath.section == Section.firstSection.rawValue {
+            vc.receiveMemo = pinMemos[indexPath.row]
+        } else {
+            vc.receiveMemo = memos[indexPath.row]
+        }
+        
         self.navigationController?.navigationBar.topItem?.backButtonTitle = "메모"
         transition(viewController: vc, transitionStyle: .push)
     }
@@ -360,12 +372,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         print(#function)
         
         if indexPath.section == Section.firstSection.rawValue {
-            let pin = searchControllerIsActive ? changePin(section: 0, item: searchedMemos[indexPath.row]) : changePin(section: 0, item: pinMemos[indexPath.row])
+            let pin = searchControllerIsActive ? togglePin(section: 0, item: searchedMemos[indexPath.row]) : togglePin(section: 0, item: pinMemos[indexPath.row])
             return UISwipeActionsConfiguration(actions: [pin])
             
         } else if indexPath.section == Section.secondSection.rawValue {
             if pinMemos.count <= 4 {
-                let pin = changePin(section: 1, item: memos[indexPath.row])
+                let pin = togglePin(section: 1, item: memos[indexPath.row])
                 return UISwipeActionsConfiguration(actions: [pin])
                 
             } else {

@@ -152,6 +152,7 @@
 		14049DB628BF1E5000495E0A /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				14838CF828C3A528008A3F6A /* UILabel */,
 				1478455628C2221F004DC07F /* UITableViewCell */,
 				147312FB28BF62FB00BD5105 /* UIViewControlelr */,
 			);
@@ -227,9 +228,16 @@
 			isa = PBXGroup;
 			children = (
 				1478455428C1EF2E004DC07F /* DateFormat + Extension.swift */,
-				14838CF628C3862B008A3F6A /* SearchedTextColor + Extension.swift */,
 			);
 			path = UITableViewCell;
+			sourceTree = "<group>";
+		};
+		14838CF828C3A528008A3F6A /* UILabel */ = {
+			isa = PBXGroup;
+			children = (
+				14838CF628C3862B008A3F6A /* SearchedTextColor + Extension.swift */,
+			);
+			path = UILabel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
