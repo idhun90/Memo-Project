@@ -26,7 +26,7 @@ class WalkthroughtView: BaseView {
     let noticeButton: UIButton = {
         let view = UIButton(type: .system)
         view.tintColor = .white
-        view.backgroundColor = .ButtonTintColor
+        view.backgroundColor = .CustomTintColor
         view.layer.cornerRadius = 15
         view.titleLabel?.textAlignment = .center
         view.setTitle("시작하기", for: .normal)

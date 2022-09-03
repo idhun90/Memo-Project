@@ -39,6 +39,7 @@
 		1478455328C1E3A9004DC07F /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 1478455228C1E3A9004DC07F /* Toast */; };
 		1478455528C1EF2E004DC07F /* DateFormat + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478455428C1EF2E004DC07F /* DateFormat + Extension.swift */; };
 		1478455828C26CEF004DC07F /* MainSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1478455728C26CEF004DC07F /* MainSearchTableViewCell.swift */; };
+		14838CF728C3862B008A3F6A /* SearchedTextColor + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14838CF628C3862B008A3F6A /* SearchedTextColor + Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		1473131328BFC58F00BD5105 /* RealmMemoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmMemoRepository.swift; sourceTree = "<group>"; };
 		1478455428C1EF2E004DC07F /* DateFormat + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormat + Extension.swift"; sourceTree = "<group>"; };
 		1478455728C26CEF004DC07F /* MainSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSearchTableViewCell.swift; sourceTree = "<group>"; };
+		14838CF628C3862B008A3F6A /* SearchedTextColor + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchedTextColor + Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				1478455428C1EF2E004DC07F /* DateFormat + Extension.swift */,
+				14838CF628C3862B008A3F6A /* SearchedTextColor + Extension.swift */,
 			);
 			path = UITableViewCell;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				1478455528C1EF2E004DC07F /* DateFormat + Extension.swift in Sources */,
 				1473131228BFC1E600BD5105 /* RealmModel.swift in Sources */,
 				14049D9C28BF1A7500495E0A /* ViewController.swift in Sources */,
+				14838CF728C3862B008A3F6A /* SearchedTextColor + Extension.swift in Sources */,
 				1478455828C26CEF004DC07F /* MainSearchTableViewCell.swift in Sources */,
 				1473130728BF874600BD5105 /* CustomForWalkthroughtViewLabel.swift in Sources */,
 				14049DC328BF2A1A00495E0A /* MainTableViewCell.swift in Sources */,

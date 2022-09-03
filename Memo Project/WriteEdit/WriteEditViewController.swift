@@ -91,7 +91,6 @@ class WriteEditViewController: BaseViewController {
         guard let originalText = text else { return }
         
         if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            
             // 제목 앞에 여러 공백 줄바꿈이 있다면 해당 줄바꿈 제거 후 첫 번째 문자열 요소를 타이틀로 선정
             // 애플 메모앱은 공백으로 줄바꿈을 주고 텍스트 작성 상태에서도 테이블뷰 제목 항목은 공백이 제거된 텍스트가 타이틀로 되고, 다시 수정 화면으로 돌아오면 공백 줄바꿈이 여전히 함께 보여진다. 어떻게 처리한걸까
             
@@ -102,7 +101,6 @@ class WriteEditViewController: BaseViewController {
             repository.fetchRealmAddItem(item: memo)
             
         } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            
             let title = originalText
             let memo = RealmMemo(realmTitle: title, realmContent: nil, realmCreatedDate: Date(), realmEditedDate: nil)
             repository.fetchRealmAddItem(item: memo)

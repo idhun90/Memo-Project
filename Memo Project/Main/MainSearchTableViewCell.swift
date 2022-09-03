@@ -71,5 +71,10 @@ final class MainSearchTableViewCell: BaseTableViewCell {
         
         self.searchDateLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
+    
+    override func prepareForReuse() {
+        self.searchContentLabel.textColor = .black
+        self.searchTitleLabel.textColor = .black
+    }
 }
 

@@ -25,16 +25,20 @@ extension UITableViewCell {
         // 월 계산
         let thisMonth = calendar.component(.month, from: today)
         let someMonth = calendar.component(.month, from: someday)
-        
+    
         // 해당 월의 주 번호 계산
         let todayWeekOfYear = calendar.component(.weekOfYear, from: today)
         let SomedayWeekOfYear = calendar.component(.weekOfYear, from: someday)
+        
+        // 년도 계산
+        let thisYear = calendar.component(.year, from: today)
+        let someYear = calendar.component(.year, from: someday)
         
         if someday == today {
             //오늘 작성한 메모
             return dateFormatTodayOrTheOthers(date: date, dateStyle: .none, timeStyle: .short)
             
-        } else if someday != today && thisMonth == someMonth && todayWeekOfYear == SomedayWeekOfYear {
+        } else if someday != today && thisMonth == someMonth && todayWeekOfYear == SomedayWeekOfYear && thisYear == someYear {
             // 이번 주 작성한 메모
             return dateFormatThisWeek(date: date)
             
@@ -44,7 +48,7 @@ extension UITableViewCell {
         }
     }
     
-    // 오늘 작성 메모 형식 또는 그 외 기간에 작성한 메모 형식
+    // 오늘 또는 그 외 기간에 작성한 메모 형식
     func dateFormatTodayOrTheOthers(date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = dateStyle
