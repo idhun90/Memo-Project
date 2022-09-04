@@ -6,19 +6,19 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     
     let searchTitleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 17, weight: .bold, color: .black)
+        view.configureUI(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
         return view
     }()
     
     let searchDateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
+        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
     let searchContentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
+        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
@@ -48,6 +48,7 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     override func configureUI() {
         [searchTitleLabel, searchStackView].forEach {
             self.contentView.addSubview($0)
+            self.backgroundColor = .CustomBackgroundColorForCell
         }
     }
     
@@ -74,8 +75,8 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse() // 깜빡하고 작성 안 했더니 검색 화면에서 핀 고정/해제 할 때마다 들쑥날쑥..
-        self.searchContentLabel.textColor = .black
-        self.searchTitleLabel.textColor = .black
+        self.searchContentLabel.textColor = .CustomContentDateLabelColor
+        self.searchTitleLabel.textColor = .CustomTitleLabelColor
     }
 }
 

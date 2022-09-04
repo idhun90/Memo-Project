@@ -14,6 +14,5 @@ class CustomForCellLabel: UILabel {
         self.font = .systemFont(ofSize: FontSize, weight: weight)
         self.textColor = color
         self.numberOfLines = 1
-        self.backgroundColor = .clear
     }
 }

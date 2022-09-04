@@ -6,19 +6,19 @@ final class MainTableViewCell: BaseTableViewCell {
     
     let titleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 17, weight: .bold, color: .black)
+        view.configureUI(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
         return view
     }()
     
     let dateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
+        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
     let contentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .systemGray)
+        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
@@ -48,6 +48,7 @@ final class MainTableViewCell: BaseTableViewCell {
     override func configureUI() {
         [titleLabel, stackView].forEach {
             self.contentView.addSubview($0)
+            self.backgroundColor = .CustomBackgroundColorForCell
         }
     }
     
