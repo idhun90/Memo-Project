@@ -41,8 +41,7 @@ final class MainPinTableViewCell: BaseTableViewCell {
     
     func setData(data: RealmMemo) {
         pinTitleLabel.text = data.realmTitle
-        pinDateLabel.text = calculateDateFormat(date: data.realmEditedDate ?? data.realmCreatedDate)
-        //data.realmEditedDate?.formatted() ?? data.realmCreatedDate.formatted()
+        pinDateLabel.text = calculateDateFormat(date: data.realmDate)
         pinContentLabel.text = data.realmContent
     }
     

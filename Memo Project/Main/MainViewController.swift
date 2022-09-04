@@ -323,7 +323,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 하나의 cell 파일로 작업했을 때 재사용 문제가 발생했었다.(예:배경색이 달랐을 때)
+    
         if self.searchControllerIsActive {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainSearchTableViewCell.reusableIdentifier, for: indexPath) as? MainSearchTableViewCell else { return UITableViewCell() }
             
@@ -372,7 +372,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         print(#function)
         
         if indexPath.section == Section.firstSection.rawValue {
-            
+            // 검색화면에서 고정된 핏이 5개일 때 고려 (코드 개선 필요)
             if searchControllerIsActive {
                 if pinMemos.count <= 4 {
                     let pin = togglePin(section: 0, item: searchedMemos[indexPath.row])

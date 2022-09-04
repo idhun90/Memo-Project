@@ -41,7 +41,7 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     
     func setData(data: RealmMemo) {
         searchTitleLabel.text = data.realmTitle
-        searchDateLabel.text = calculateDateFormat(date: data.realmEditedDate ?? data.realmCreatedDate)
+        searchDateLabel.text = calculateDateFormat(date: data.realmDate)
         searchContentLabel.text = data.realmContent
     }
     

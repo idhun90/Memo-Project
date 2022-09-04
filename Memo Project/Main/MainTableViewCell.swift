@@ -41,7 +41,7 @@ final class MainTableViewCell: BaseTableViewCell {
     
     func setData(data: RealmMemo) {
         titleLabel.text = data.realmTitle
-        dateLabel.text = calculateDateFormat(date: data.realmEditedDate ?? data.realmCreatedDate)
+        dateLabel.text = calculateDateFormat(date: data.realmDate)
         contentLabel.text = data.realmContent
     }
     

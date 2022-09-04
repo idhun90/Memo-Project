@@ -10,12 +10,12 @@ import Realm
  - 키보드 내려가지 않음 (구현)
  
  수정 화면
- - 사용자가 텍스트뷰 클릭 시 키보드 띄워줌
+ - 사용자가 텍스트뷰 클릭 시 키보드 띄워줌 (구현)
  - 편집 상태 시작 시 공유, 완료 버튼 나타남 (구현)
  
  공통 사항
  - 완료 버튼 누르거나, 편집 상태가 끝나거나, 백버튼 액션, 제스처를 통해 이전 화면 이동 시 메모가 저장 됨 (구현)
- - 어떤 텍스트도 입력되지 않다면 통보 없이 메모 삭제 (어떤 텍스트도 입력되지 않았다면 애초에 저장을 안 하도록 구현했..)
+ - 어떤 텍스트도 입력되지 않다면 통보 없이 메모 삭제 (구현)
  - 리턴키를 입력하기 전까지 내용을 제목으로, 나머지 내용은 내용으로 분류 (두 컬럼으로 나눠 저장) (구현)
  - 우측 상단 공유 버튼 클릭 시 메모 텍스트가 UIActivityViewController를 통해 공유됨
  
@@ -54,7 +54,7 @@ class WriteEditViewController: BaseViewController {
         print("================================================")
         
         mainView.textView.resignFirstResponder()
-        saveTextToRealm(text: mainView.textView.text)
+        saveOrUpdateMemo(text: self.mainView.textView.text)
         
     }
     
@@ -94,33 +94,52 @@ class WriteEditViewController: BaseViewController {
     
     @objc func finishButtonClicked() {
         // 완료 버튼 누를 시 데이터 저장 및 키보드 내림 (saveTextToRelam을 이곳에 작성하면, DidEndEditing과 중복 호출로 두 번 저장됨)
+        // 완료 버튼을 누르고 만약 앱을 완전히 종료되면 작성된 메모는 저장되어야 하는가
         self.mainView.textView.resignFirstResponder()
+        
     }
-    
-    func saveTextToRealm(text: String!) {
-        
-        // 저장 전 줄바꿈 여부 체크
+
+    func saveOrUpdateMemo(text: String?) {
         guard let originalText = text else { return }
-        
-        if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            // 제목 앞에 여러 공백 줄바꿈이 있다면 해당 줄바꿈 제거 후 첫 번째 문자열 요소를 타이틀로 선정
-            // 애플 메모앱은 공백으로 줄바꿈을 주고 텍스트 작성 상태에서도 테이블뷰 제목 항목은 공백이 제거된 텍스트가 타이틀로 되고, 다시 수정 화면으로 돌아오면 공백 줄바꿈이 여전히 함께 보여진다. 어떻게 처리한걸까
+        // 작성화면 일 때
+        if self.receiveMemo == nil {
+            // 원본 데이터를 저장해서 비교하고, 셀에 나타낼 때 분류해주는 게 더 바람직하지 않을까 싶다.(나중에 수정)
+            if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0] // 제목, 내용을 분리해주는 줄바꿈 전에 모든 공백, 줄바꿈 요소 제거
+                let contentSubstirng = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines) // 원본 텍스트에서 타이틀을 제거하고 타이틀과 내용 사이에 공백, 줄바꿈도 제거
+                let content = String(contentSubstirng)
+                let memo = RealmMemo(realmOriginalText: originalText, realmTitle: title, realmContent: content, realmDate: Date())
+                repository.fetchRealmAddItem(item: memo)
+            } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                let title = originalText
+                let memo = RealmMemo(realmOriginalText: originalText, realmTitle: title, realmContent: nil, realmDate: Date())
+                repository.fetchRealmAddItem(item: memo)
+            } else {
+                print("빈 텍스트는 저장되지 않습니다.")
+            }
             
-            let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
-            let contentSubstring = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines)
-            let content = String(contentSubstring)
-            let memo = RealmMemo(realmTitle: title, realmContent: content, realmCreatedDate: Date(), realmEditedDate: nil)
-            repository.fetchRealmAddItem(item: memo)
-            
-        } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let title = originalText
-            let memo = RealmMemo(realmTitle: title, realmContent: nil, realmCreatedDate: Date(), realmEditedDate: nil)
-            repository.fetchRealmAddItem(item: memo)
-            
-        } else {
-            print("저장할 텍스트 내용이 없습니다.")
+        } else { // 수정 화면일 때
+            if self.receiveMemo?.realmOriginalText == text {
+                // 데이터가 같으면 -> 미 저장
+                print("같은 데이터는 저장 또는 변경하지 않습니다.")
+            } else {
+                // 데이터가 다르다면 -> 수정
+                print("데이터가 다르네요. 수정이 필요합니다.")
+                if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
+                    let contentSubstirng = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines)
+                    let content = String(contentSubstirng)
+                    
+                    self.repository.fetchRealmUpdate(objectId: receiveMemo!.objectId, originalText: originalText, title: title, content: content, editedDate: Date())
+                } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    let title = originalText
+                    self.repository.fetchRealmUpdate(objectId: receiveMemo!.objectId, originalText: originalText, title: title, content: nil, editedDate: Date())
+                } else {
+                    self.repository.fetchRealmDeleteItem(item: receiveMemo!)
+                }
+                // 주의: 수정된 텍스트가 빈 텍스트라면 제거
+            }
         }
-        
     }
 }
 
@@ -152,12 +171,6 @@ extension WriteEditViewController: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         print(#function)
-        // 백버튼 또는 제스처로 이전 화면 복귀 시 해당 메소드 호출 확인
-        // 이 곳에서 데이터 저장 또는 값 전달이 이뤄져야 한다. (공백이 아닐 경우에만)
-        
-        //        textView.resignFirstResponder()
-        //        saveTextToRealm(text: textView.text)
-        
     }
 }
 
