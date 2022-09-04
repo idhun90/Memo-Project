@@ -244,22 +244,22 @@ final class MainViewController: BaseViewController {
 //MARK: - extension UISearchBarDelegate
 
 extension MainViewController: UISearchBarDelegate {
-
-        func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-            //self.mainView.searchController.becomeFirstResponder()
-            print("편집 시작")
-            self.navigationController?.isToolbarHidden = true
-        }
-
-        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//            searchBar.resignFirstResponder()
-        }
-
-        func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-            print("취소 버튼 클릭")
-            self.navigationController?.isToolbarHidden = false
-        }
-
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        //self.mainView.searchController.becomeFirstResponder()
+        print("편집 시작")
+        self.navigationController?.isToolbarHidden = true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        //            searchBar.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("취소 버튼 클릭")
+        self.navigationController?.isToolbarHidden = false
+    }
+    
 }
 
 //MARK: - extension UISearchResultsUpdating
@@ -270,7 +270,7 @@ extension MainViewController: UISearchResultsUpdating {
         guard let searchedText = searchController.searchBar.text else { return }
         let searchedItems = repository.fetchRealmFilterSearchByText(text: searchedText.trimmingCharacters(in: .whitespacesAndNewlines))
         searchedMemos = searchedItems
-
+        
         print("searchedMemos 갯수:", searchedMemos.count)
         print(searchControllerIsActive)
         
@@ -331,7 +331,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             
             cell.searchTitleLabel.changeSearchedTextColor(label: cell.searchTitleLabel, search: self.mainView.searchController.searchBar.text!, color: .CustomTintColor)
             cell.searchContentLabel.changeSearchedTextColor(label: cell.searchContentLabel, search: self.mainView.searchController.searchBar.text!, color: .CustomTintColor)
-    
+            
             return cell
             
         } else {
@@ -372,14 +372,39 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         print(#function)
         
         if indexPath.section == Section.firstSection.rawValue {
-            let pin = searchControllerIsActive ? togglePin(section: 0, item: searchedMemos[indexPath.row]) : togglePin(section: 0, item: pinMemos[indexPath.row])
-            return UISwipeActionsConfiguration(actions: [pin])
+            
+            if searchControllerIsActive {
+                if pinMemos.count <= 4 {
+                    let pin = togglePin(section: 0, item: searchedMemos[indexPath.row])
+                    return UISwipeActionsConfiguration(actions: [pin])
+                } else {
+                    let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+                        completionHandler(true)
+                    }
+                    
+                    pin.backgroundColor = .CustomTintColor
+                    pin.image = searchedMemos[indexPath.row].realmPin ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
+                    
+                    if pin.image == UIImage(systemName: "pin.slash.fill") {
+                        self.repository.fetchRealmChangePin(item: searchedMemos[indexPath.row])
+                        self.mainView.tableView.reloadData()
+                    } else {
+                        var style = ToastStyle()
+                        style.backgroundColor = .CustomTintColor
+                        self.mainView.makeToast("최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center, style: style)
+                    }
+                    
+                    return UISwipeActionsConfiguration(actions: [pin])
+                }
+            } else {
+                let pin = togglePin(section: 0, item: pinMemos[indexPath.row])
+                return UISwipeActionsConfiguration(actions: [pin])
+            }
             
         } else if indexPath.section == Section.secondSection.rawValue {
             if pinMemos.count <= 4 {
                 let pin = togglePin(section: 1, item: memos[indexPath.row])
                 return UISwipeActionsConfiguration(actions: [pin])
-                
             } else {
                 let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
                     completionHandler(true)
@@ -394,7 +419,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                 
                 return UISwipeActionsConfiguration(actions: [pin])
             }
-            
         } else {
             print("핀 스와이프 동작에 문제가 발생했습니다.")
             return nil
