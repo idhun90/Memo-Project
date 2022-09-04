@@ -48,7 +48,7 @@ final class MainTableViewCell: BaseTableViewCell {
     override func configureUI() {
         [titleLabel, stackView].forEach {
             self.contentView.addSubview($0)
-            self.backgroundColor = .CustomBackgroundColorForCell
+            self.backgroundColor = .CustomBackgroundColorForSubView
         }
     }
     

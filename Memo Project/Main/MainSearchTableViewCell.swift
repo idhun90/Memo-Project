@@ -48,7 +48,7 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     override func configureUI() {
         [searchTitleLabel, searchStackView].forEach {
             self.contentView.addSubview($0)
-            self.backgroundColor = .CustomBackgroundColorForCell
+            self.backgroundColor = .CustomBackgroundColorForSubView
         }
     }
     

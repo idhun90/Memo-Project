@@ -25,7 +25,7 @@ import Toast
  : 검색 결과 갯수를 섹션에 보여준다.(구현, 큰 섹션은 아직..)
  - 검색한 키워드의 해당 단어 텍스트 컬러 변경 (구현)
  - 메모 고정, 삭제 기능도 검색 화면에서 구현 (구현)
- - 셀을 클릭하면 메모 수정 화면으로 전환 -> 그리고 수정 화면에서 백버튼 클릭 시 검색화면으로 다시 돌아옴.
+ - 셀을 클릭하면 메모 수정 화면으로 전환 -> 그리고 수정 화면에서 백버튼 클릭 시 검색화면으로 다시 돌아옴. (구현)
  */
 
 enum Section: Int, CaseIterable {
@@ -303,23 +303,18 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if self.searchControllerIsActive {
             return searchedMemos.count
-            
         } else {
             switch section {
             case Section.firstSection.rawValue:
                 return pinMemos.count
-                //return self.mainView.searchController.becomeFirstResponder() ? 2 : pinMemos.count
             case Section.secondSection.rawValue:
                 return memos.count
             default:
                 return 0
             }
-            
         }
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

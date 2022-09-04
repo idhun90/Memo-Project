@@ -48,7 +48,7 @@ final class MainPinTableViewCell: BaseTableViewCell {
     override func configureUI() {
         [pinTitleLabel, pinStackView].forEach {
             self.contentView.addSubview($0)
-            self.backgroundColor = .CustomBackgroundColorForCell
+            self.backgroundColor = .CustomBackgroundColorForSubView
         }
     }
     

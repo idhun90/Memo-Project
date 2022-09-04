@@ -89,7 +89,8 @@ class WriteEditViewController: BaseViewController {
     }
     
     @objc func shareButtonClicked() {
-        
+        createTextFileToDocumentDirectory(text: self.mainView.textView.text)
+        showActivityViewController()
     }
     
     @objc func finishButtonClicked() {
