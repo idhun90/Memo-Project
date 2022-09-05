@@ -2,25 +2,6 @@ import UIKit
 
 import Realm
 
-/*
- 
- 요구사항
- 작성 화면
- - 진입 시 자동으롤 키보드 띄워줌 (becomeFirstResponder) (구현)
- - 키보드 내려가지 않음 (구현)
- 
- 수정 화면
- - 사용자가 텍스트뷰 클릭 시 키보드 띄워줌 (구현)
- - 편집 상태 시작 시 공유, 완료 버튼 나타남 (구현)
- 
- 공통 사항
- - 완료 버튼 누르거나, 편집 상태가 끝나거나, 백버튼 액션, 제스처를 통해 이전 화면 이동 시 메모가 저장 됨 (구현)
- - 어떤 텍스트도 입력되지 않다면 통보 없이 메모 삭제 (구현)
- - 리턴키를 입력하기 전까지 내용을 제목으로, 나머지 내용은 내용으로 분류 (두 컬럼으로 나눠 저장) (구현)
- - 우측 상단 공유 버튼 클릭 시 메모 텍스트가 UIActivityViewController를 통해 공유됨 (구현)
- 
- */
-
 class WriteEditViewController: BaseViewController {
     
     let mainView = WriteEditView()
@@ -34,23 +15,17 @@ class WriteEditViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
-        print("================================================")
         loadMemoData()
         autoShowKeyboard()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
-        print("================================================")
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print(String(describing: WriteEditViewController.self), "->", #function, "-> 호출됨")
-        print("================================================")
         mainView.textView.resignFirstResponder()
         saveOrUpdateMemo(text: self.mainView.textView.text)
     }
@@ -63,7 +38,6 @@ class WriteEditViewController: BaseViewController {
         self.mainView.textView.text = receiveMemo.realmOriginalText
     }
     
-    // 작성 화면 진입 시 키보드 자동 띄움 및 공유, 완료 버튼 보이기
     func autoShowKeyboard() {
         if receiveMemo == nil {
             mainView.textView.becomeFirstResponder()
@@ -151,7 +125,6 @@ class WriteEditViewController: BaseViewController {
 extension WriteEditViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        print(#function)
         showRightBarButtonItems()
         showHideShareButton()
     }
@@ -161,7 +134,6 @@ extension WriteEditViewController: UITextViewDelegate {
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        print(#function)
     }
 }
 

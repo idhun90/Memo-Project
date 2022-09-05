@@ -4,28 +4,18 @@ import RealmSwift
 import Toast
 
 /*
- 요구 사항
- - 최초 앱을 실행할 경우 팝업 화면을 띄워줍니다. 최초 1회만 뜹니다. (구현)
- - 총 작성된 메모 갯수가 네비게이션 타이틀에 보여지며, 1000개가 넘을 경우, 3자리마다 콤마 표기 (구현)
- - 최신 순으로 정렬 (구현)
- - 메모 최대 5개 최신순으로 정렬 고정, 5개가 초과일 경우 토스트로 공지 (구현)
- - 고정된 메모는 별도 섹션 관리 및 고정된 메모가 없다면 세션을 표기하지 않음. (구현)
- - Leading Swipe 고정 또는 해제 (구현)
- - Trailing Swipe 메모 삭제 구현 및 삭제 전 삭제 여부 확인 (구현)
- - 날짜 포멧 형태 (구현)
- : 오늘 작성한 메모는 오전 08:19 형태 표기 (구현)
- : 이번 주 작성한 메모는 일요일, 화요일 형태 표기 (구현)
- : 그 외 기간 작성된 메모는 2021.10.12 오후 02:22 형태 표기 (구현)
- - 섹션 헤더 (구현)
- 
- 검색 기능
- - UISearchController 통해 제목 및 내용 실시간 검색 구현 (구현)
- : 입력하는 텍스트가 변경될 때 마다 검색이 이루어진다. (구현)
- : 검색 결과를 스크롤하거나 키보드의 검색 버튼을 누르면 키보드가 내려간다. (구현)
- : 검색 결과 갯수를 섹션에 보여준다.(구현)
- - 검색한 키워드의 해당 단어 텍스트 컬러 변경 (구현)
- - 메모 고정, 삭제 기능도 검색 화면에서 구현 (구현)
- - 셀을 클릭하면 메모 수정 화면으로 전환 -> 그리고 수정 화면에서 백버튼 클릭 시 검색화면으로 다시 돌아옴. (구현)
+ 해결 못한 문제점
+ - 텍스트가 많아지면 키보드에 가려지는 문제 (라이브러리 고려했으나 안 예뻐서..)
+ - Leading, Trailing Swipe 코드 간소화 필요 (특히 LeadingSwipe)
+ - 작성/수정 화면 빈 텍스트 계산 로직 개선 필요
+ - 작성/수정 화면에서 값 저장 시점 고민 필요
+    : 작성/수정 화면이 viewWillDisappear 시점에 값을 저장하도록 구현했다.
+    : 완료 버튼을 누른 상태에서 사용자가 이전 화면으로 돌아가지 않고 앱을 종료하고 다시 실행한다면? 작성된 메모는 저장되지 않을 것 -> 완료 버튼에도 값 저장을 구현하면 중복 저장 되는 문제 발생
+    : 데이터 저장 시점 개선 필요
+ - 작성/수정 화면에서 제스처로 이전 화면으로 돌아가는 척하면서 다시 돌아오고를 반복한다면 메모가 계속 생성되는 문제
+ - 날짜 표기
+    : 같은 년도, 같은 월, 오늘 날짜가 아닐 때 '이번 주'요구 형식에 맞게 구현했으나, 주의 시작이 일요일이어서 일요일부터 '그 외 기간'형식으로 나타나짐
+    : 주의 시작일을 월요일로 변경 가능 여부 또는 다른 방법으로 구현 필요 체크
  */
 
 enum Section: Int, CaseIterable {
@@ -47,36 +37,25 @@ final class MainViewController: BaseViewController {
     private let mainView = MainView()
     let repository = RealmMemoRepository()
     
-    //모든 메모
     var allMemos: Results<RealmMemo>! {
         didSet {
             print("allMemos 변화 발생")
-            print("========================")
         }
     }
-    // 메모
+    
     var memos: Results<RealmMemo>! {
         didSet {
             print("memos 변화 발생")
-            print("========================")
         }
     }
-    // 고정된 메모
+    
     var pinMemos: Results<RealmMemo>! {
         didSet {
             print("pinMemos 변화 발생")
-            print("========================")
         }
     }
     
     var searchedMemos: Results<RealmMemo>!
-    
-    var searchControllerIsActive: Bool {
-        
-        // return self.mainView.searchController.isActive && !self.mainView.searchController.searchBar.text!.isEmpty // 기존 Cell이 다 보임. 검색어 입력 전까지 false 상태이기 때문에 (기록용)
-        return self.mainView.searchController.isActive // 검색 화면 눌렀을 때 Cell이 하나도 안 보여주게 구현하고 싶음.
-        
-    }
     
     override func loadView() {
         self.view = mainView
@@ -84,9 +63,6 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
-        print("================================================")
-        print(repository.fetchRealmPath()) // RealmDefaults 경로
         
         showOnceWalkthroughView()
         
@@ -97,24 +73,15 @@ final class MainViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
-        print("================================================")
-
+        
         mainView.tableView.reloadData()
         setNavigationBarTitle()
-
-        // 작성 화면에서 제스처 또는 백버튼으로 화면 전환 과정에서 viewWillAppear 선 호출 -> textViewDidEndEditing이 호출된다.
-        // 따라서 이 곳에서 데이터 또는 tableView 리로딩은 반영이 안 되는 문제가 있었다.
-        // 1. 화면 전환이 완전히 종료된 시점 viewDidAppear에서 데이터를 반영하는 것을 선택함. -> 반응이 느리다.
-        // 2. 작성 화면 viewWillDisAppear에 데이터를 Realm 저장 및 키보드 내리기 기능 추가 -> 여전히 화면 전환 왔다갔다할 때 계속 메모가 추가되는 것을 확인
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
-        print("================================================")
-        // 리로딩 여기서 테스트하기. 제스처 유지한채로 왔다갔다하면 중복 현상 발생
+        
     }
     
     //MARK: - UI 셋업
@@ -152,7 +119,6 @@ final class MainViewController: BaseViewController {
         self.toolbarItems = barButtonItems
     }
     
-    // 메인 화면 -> 작성 화면
     @objc func writeButtonClicked() {
         let vc = WriteEditViewController()
         self.navigationController?.navigationBar.topItem?.backButtonTitle = "메모"
@@ -160,14 +126,14 @@ final class MainViewController: BaseViewController {
     }
     
     //MARK: - 메소드
-    // 최초 1회 Walkthrough 화면 표시
+    
     func showOnceWalkthroughView() {
         if !UserDefaults.standard.bool(forKey: WalkthroughtViewToggle.once) {
             let vc = WalkthroughViewController()
             transition(viewController: vc, transitionStyle: .presentOverFullScreen)
         }
     }
-    // 메인&검색 타이틀에 들어갈 메모 갯수
+    
     func countMemosToTitle(memos: Results<RealmMemo>!) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
@@ -178,7 +144,10 @@ final class MainViewController: BaseViewController {
         return total
     }
     
-    // 핀 고정, 해제 메소드
+    var searchControllerIsActive: Bool {
+        return self.mainView.searchController.isActive
+    }
+    
     func togglePin(section: Int, item: RealmMemo) -> UIContextualAction {
         
         let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
@@ -200,7 +169,6 @@ final class MainViewController: BaseViewController {
         return pin
     }
     
-    // 테이블뷰 셀 삭제 메소드
     func deleteCell(section: Int, item: RealmMemo) -> UIContextualAction {
         
         let delete = UIContextualAction(style: .destructive, title: title) { action, view, completionHandler in
@@ -227,7 +195,7 @@ final class MainViewController: BaseViewController {
         
         return delete
     }
-    // 토스트 호출
+    
     func showToast(message: String?, duration: TimeInterval, position: ToastPosition) {
         var style = ToastStyle()
         style.backgroundColor = .CustomTintColor
@@ -240,7 +208,6 @@ final class MainViewController: BaseViewController {
 extension MainViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        //self.mainView.searchController.becomeFirstResponder()
         print("편집 시작")
         self.navigationController?.isToolbarHidden = true
     }
@@ -284,20 +251,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return 44
     }
     
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        switch section {
-//        case Section.firstSection.rawValue:
-//            return self.searchControllerIsActive ? "\(self.countMemosToTitle(memos: searchedMemos))개 찾음" : Section.firstSection.sectionTitle
-//        case Section.secondSection.rawValue:
-//            return Section.secondSection.sectionTitle
-//        default:
-//            return nil
-//        }
-//    }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MainTableViewHeaderView.reusableIdentifier) as? MainTableViewHeaderView else { return UIView() }
-       
+        
         switch section {
         case Section.firstSection.rawValue:
             header.sectionTitle.text = self.searchControllerIsActive ? "\(self.countMemosToTitle(memos: searchedMemos))개 찾음" : Section.firstSection.sectionTitle
@@ -306,7 +262,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             return nil
         }
-
+        
         return header
     }
     
@@ -326,7 +282,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
+        
         if self.searchControllerIsActive {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainSearchTableViewCell.reusableIdentifier, for: indexPath) as? MainSearchTableViewCell else { return UITableViewCell() }
             
@@ -372,7 +328,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        print(#function)
 
         if indexPath.section == Section.firstSection.rawValue {
             if searchControllerIsActive { // 검색화면
@@ -425,10 +380,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                     completionHandler(true)
                     self.showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
                 }
-
+                
                 pin.backgroundColor = .CustomTintColor
                 pin.image = UIImage(systemName: "pin.fill")
-
+                
                 return UISwipeActionsConfiguration(actions: [pin])
             }
         } else {

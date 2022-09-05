@@ -19,5 +19,4 @@ final class RealmMemo: Object {
         self.realmDate = realmDate
         self.realmPin = false
     }
-    
 }
