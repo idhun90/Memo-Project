@@ -60,7 +60,7 @@ class WriteEditViewController: BaseViewController {
             print("데이터가 존재하지 않습니다.")
             return
         }
-        self.mainView.textView.text = receiveMemo.realmContent == nil ? receiveMemo.realmTitle : receiveMemo.realmTitle + "\n" + (receiveMemo.realmContent!)
+        self.mainView.textView.text = receiveMemo.realmOriginalText
     }
     
     // 작성 화면 진입 시 키보드 자동 띄움 및 공유, 완료 버튼 보이기
@@ -95,16 +95,25 @@ class WriteEditViewController: BaseViewController {
         // 완료 버튼을 누르고 만약 앱을 완전히 종료되면 작성된 메모는 저장되어야 하는가
         self.mainView.textView.resignFirstResponder()
     }
-
+    
+    func separateTitle(originalText: String) -> String {
+        return originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
+    }
+    
+    func separateContent(originalText: String, title: String) -> String {
+        let substring = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines)
+        let content = String(substring)
+        return content
+    }
+    
     func saveOrUpdateMemo(text: String?) {
         guard let originalText = text else { return }
         // 작성화면 일 때
         if self.receiveMemo == nil {
-            // 원본 데이터를 Realm에 저장하고, 셀에 나타낼 때 분류해주는 게 더 바람직하지 않을까 싶다.(나중에 수정)
+            
             if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0] // 제목, 내용을 분리해주는 줄바꿈 전에 모든 공백, 줄바꿈 요소 제거
-                let contentSubstirng = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines) // 원본 텍스트에서 타이틀을 제거하고 타이틀과 내용 사이에 공백, 줄바꿈도 제거
-                let content = String(contentSubstirng)
+                let title = separateTitle(originalText: originalText)
+                let content = separateContent(originalText: originalText, title: title)
                 let memo = RealmMemo(realmOriginalText: originalText, realmTitle: title, realmContent: content, realmDate: Date())
                 repository.fetchRealmAddItem(item: memo)
             } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -118,21 +127,21 @@ class WriteEditViewController: BaseViewController {
         } else { // 수정 화면일 때
             if self.receiveMemo?.realmOriginalText == text {
                 // 데이터가 같으면 -> 미 저장
-                print("같은 데이터는 저장 또는 변경하지 않습니다.")
+                print("같은 메모는 저장 또는 수정되지 않습니다.")
             } else {
                 // 데이터가 다르다면 -> 수정
-                print("수정된 데이터로 저장됩니다.")
                 if originalText.contains("\n") && !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    let title = originalText.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: "\n")[0]
-                    let contentSubstirng = originalText.trimmingCharacters(in: .whitespacesAndNewlines).dropFirst(title.count).trimmingCharacters(in: .whitespacesAndNewlines)
-                    let content = String(contentSubstirng)
-                    
+                    let title = separateTitle(originalText: originalText)
+                    let content = separateContent(originalText: originalText, title: title)
                     self.repository.fetchRealmUpdate(objectId: receiveMemo!.objectId, originalText: originalText, title: title, content: content, editedDate: Date())
+                    print("수정된 데이터로 저장됩니다.")
                 } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     let title = originalText
                     self.repository.fetchRealmUpdate(objectId: receiveMemo!.objectId, originalText: originalText, title: title, content: nil, editedDate: Date())
+                    print("수정된 데이터로 저장됩니다.")
                 } else {
                     self.repository.fetchRealmDeleteItem(item: receiveMemo!)
+                    print("수정된 메모가 빈 텍스트여서 삭제됩니다.")
                 }
             }
         }
