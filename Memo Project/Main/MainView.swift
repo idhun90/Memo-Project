@@ -16,6 +16,7 @@ final class MainView: BaseView {
         view.register(MainPinTableViewCell.self, forCellReuseIdentifier: MainPinTableViewCell.reusableIdentifier)
         view.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.reusableIdentifier)
         view.register(MainSearchTableViewCell.self, forCellReuseIdentifier: MainSearchTableViewCell.reusableIdentifier)
+        view.register(MainTableViewHeaderView.self, forHeaderFooterViewReuseIdentifier: MainTableViewHeaderView.reusableIdentifier)
         view.backgroundColor = .CustomBackgroundColorForView
         view.keyboardDismissMode = .onDrag
         return view

@@ -43,7 +43,7 @@ extension UIViewController {
         vc.completionWithItemsHandler = { (activity, success, items, error) in
             if success {
                 self.deleteTextFileFromDocumentDirectory()
-                print("작업을 완성하고 해당 파일을 삭제합니다.")
+                print("작업이 성공하여 해당 파일을 삭제합니다.")
             } else {
                 print("작업을 취소 또는 실패하여 삭제되지 않았습니다.")
             }

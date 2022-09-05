@@ -9,20 +9,20 @@ import Toast
  - 총 작성된 메모 갯수가 네비게이션 타이틀에 보여지며, 1000개가 넘을 경우, 3자리마다 콤마 표기 (구현)
  - 최신 순으로 정렬 (구현)
  - 메모 최대 5개 최신순으로 정렬 고정, 5개가 초과일 경우 토스트로 공지 (구현)
- - 고정된 메모는 별도 섹션 관리 및 고정된 메모가 없다면 세션을 표기하지 않음. (구현) (세션 타이틀은 남아있음..)
+ - 고정된 메모는 별도 섹션 관리 및 고정된 메모가 없다면 세션을 표기하지 않음. (구현)
  - Leading Swipe 고정 또는 해제 (구현)
  - Trailing Swipe 메모 삭제 구현 및 삭제 전 삭제 여부 확인 (구현)
  - 날짜 포멧 형태 (구현)
  : 오늘 작성한 메모는 오전 08:19 형태 표기 (구현)
  : 이번 주 작성한 메모는 일요일, 화요일 형태 표기 (구현)
  : 그 외 기간 작성된 메모는 2021.10.12 오후 02:22 형태 표기 (구현)
- - 섹션 헤더 (구현, 큰 섹션은 아직..)
+ - 섹션 헤더 (구현)
  
  검색 기능
  - UISearchController 통해 제목 및 내용 실시간 검색 구현 (구현)
  : 입력하는 텍스트가 변경될 때 마다 검색이 이루어진다. (구현)
  : 검색 결과를 스크롤하거나 키보드의 검색 버튼을 누르면 키보드가 내려간다. (구현)
- : 검색 결과 갯수를 섹션에 보여준다.(구현, 큰 섹션은 아직..)
+ : 검색 결과 갯수를 섹션에 보여준다.(구현)
  - 검색한 키워드의 해당 단어 텍스트 컬러 변경 (구현)
  - 메모 고정, 삭제 기능도 검색 화면에서 구현 (구현)
  - 셀을 클릭하면 메모 수정 화면으로 전환 -> 그리고 수정 화면에서 백버튼 클릭 시 검색화면으로 다시 돌아옴. (구현)
@@ -227,7 +227,7 @@ final class MainViewController: BaseViewController {
         
         return delete
     }
-    
+    // 토스트 호출
     func showToast(message: String?, duration: TimeInterval, position: ToastPosition) {
         var style = ToastStyle()
         style.backgroundColor = .CustomTintColor
@@ -243,10 +243,6 @@ extension MainViewController: UISearchBarDelegate {
         //self.mainView.searchController.becomeFirstResponder()
         print("편집 시작")
         self.navigationController?.isToolbarHidden = true
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        //            searchBar.resignFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -284,15 +280,34 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return 65
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
+    }
+    
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        switch section {
+//        case Section.firstSection.rawValue:
+//            return self.searchControllerIsActive ? "\(self.countMemosToTitle(memos: searchedMemos))개 찾음" : Section.firstSection.sectionTitle
+//        case Section.secondSection.rawValue:
+//            return Section.secondSection.sectionTitle
+//        default:
+//            return nil
+//        }
+//    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MainTableViewHeaderView.reusableIdentifier) as? MainTableViewHeaderView else { return UIView() }
+       
         switch section {
         case Section.firstSection.rawValue:
-            return self.searchControllerIsActive ? "\(self.countMemosToTitle(memos: searchedMemos))개 찾음" : Section.firstSection.sectionTitle
+            header.sectionTitle.text = self.searchControllerIsActive ? "\(self.countMemosToTitle(memos: searchedMemos))개 찾음" : Section.firstSection.sectionTitle
         case Section.secondSection.rawValue:
-            return Section.secondSection.sectionTitle
+            header.sectionTitle.text = Section.secondSection.sectionTitle
         default:
             return nil
         }
+
+        return header
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -420,55 +435,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             print("핀 스와이프 동작에 문제가 발생했습니다.")
             return nil
         }
-
-//        if indexPath.section == Section.firstSection.rawValue {
-//            // (코드 개선 필요)
-//            if searchControllerIsActive {
-//                if pinMemos.count <= 4 {
-//                    let pin = togglePin(section: 0, item: searchedMemos[indexPath.row])
-//                    return UISwipeActionsConfiguration(actions: [pin])
-//                } else {
-//                    let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
-//                        completionHandler(true)
-//                    }
-//
-//                    pin.backgroundColor = .CustomTintColor
-//                    pin.image = searchedMemos[indexPath.row].realmPin ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
-//
-//                    if pin.image == UIImage(systemName: "pin.slash.fill") {
-//                        self.repository.fetchRealmChangePin(item: searchedMemos[indexPath.row])
-//                        self.mainView.tableView.reloadData()
-//                    } else {
-//                        showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
-//                    }
-//
-//                    return UISwipeActionsConfiguration(actions: [pin])
-//                }
-//            } else {
-//                let pin = togglePin(section: 0, item: pinMemos[indexPath.row])
-//                return UISwipeActionsConfiguration(actions: [pin])
-//            }
-//
-//        } else if indexPath.section == Section.secondSection.rawValue {
-//            if pinMemos.count <= 4 {
-//                let pin = togglePin(section: 1, item: memos[indexPath.row])
-//                return UISwipeActionsConfiguration(actions: [pin])
-//            } else {
-//                let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
-//                    completionHandler(true)
-//                }
-//
-//                pin.backgroundColor = .CustomTintColor
-//                pin.image = UIImage(systemName: "pin.fill")
-//
-//                showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
-//
-//                return UISwipeActionsConfiguration(actions: [pin])
-//            }
-//        } else {
-//            print("핀 스와이프 동작에 문제가 발생했습니다.")
-//            return nil
-//        }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
