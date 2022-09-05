@@ -517,6 +517,7 @@
 				DEVELOPMENT_TEAM = 7CR6X9MD8C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Memo Project/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "이도헌";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -546,6 +547,7 @@
 				DEVELOPMENT_TEAM = 7CR6X9MD8C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Memo Project/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "이도헌";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
