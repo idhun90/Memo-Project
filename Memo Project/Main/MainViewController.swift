@@ -99,21 +99,10 @@ final class MainViewController: BaseViewController {
         super.viewWillAppear(animated)
         print(String(describing: MainViewController.self), "->", #function, "-> 호출됨")
         print("================================================")
-        
-        //        allMemos = repository.fetchRealm()
-        //        pinMemos = repository.fetchRealmPin()
-        //        memos = repository.fetchRealmNoPin()
-        
+
         mainView.tableView.reloadData()
         setNavigationBarTitle()
-        
-        print("allMemos 갯수:", allMemos.count)
-        print("pinMemos 갯수:", pinMemos.count)
-        print("memos 갯수:", memos.count)
-        print(self.mainView.searchController.isActive)
-        print("================================================")
-        
-        
+
         // 작성 화면에서 제스처 또는 백버튼으로 화면 전환 과정에서 viewWillAppear 선 호출 -> textViewDidEndEditing이 호출된다.
         // 따라서 이 곳에서 데이터 또는 tableView 리로딩은 반영이 안 되는 문제가 있었다.
         // 1. 화면 전환이 완전히 종료된 시점 viewDidAppear에서 데이터를 반영하는 것을 선택함. -> 반응이 느리다.
@@ -129,8 +118,7 @@ final class MainViewController: BaseViewController {
     }
     
     //MARK: - UI 셋업
-    override func configureUI() {
-        print(#function)
+    override func configure() {
         self.mainView.tableView.delegate = self
         self.mainView.tableView.dataSource = self
         self.mainView.searchController.searchResultsUpdater = self
@@ -240,6 +228,12 @@ final class MainViewController: BaseViewController {
         return delete
     }
     
+    func showToast(message: String?, duration: TimeInterval, position: ToastPosition) {
+        var style = ToastStyle()
+        style.backgroundColor = .CustomTintColor
+        self.mainView.makeToast(message, duration: duration, position: position, style: style)
+    }
+    
 }
 //MARK: - extension UISearchBarDelegate
 
@@ -291,7 +285,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
         switch section {
         case Section.firstSection.rawValue:
             return self.searchControllerIsActive ? "\(self.countMemosToTitle(memos: searchedMemos))개 찾음" : Section.firstSection.sectionTitle
@@ -365,37 +358,49 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         print(#function)
-        
+
         if indexPath.section == Section.firstSection.rawValue {
-            // 검색화면에서 고정된 핏이 5개일 때 고려 (코드 개선 필요)
-            if searchControllerIsActive {
-                if pinMemos.count <= 4 {
-                    let pin = togglePin(section: 0, item: searchedMemos[indexPath.row])
-                    return UISwipeActionsConfiguration(actions: [pin])
-                } else {
+            if searchControllerIsActive { // 검색화면
+                if pinMemos.count <= 4 { // 5개 미만 일 때
                     let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
                         completionHandler(true)
+                        self.repository.fetchRealmChangePin(item: self.searchedMemos[indexPath.row])
+                        self.mainView.tableView.reloadData()
                     }
                     
                     pin.backgroundColor = .CustomTintColor
                     pin.image = searchedMemos[indexPath.row].realmPin ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
                     
-                    if pin.image == UIImage(systemName: "pin.slash.fill") {
-                        self.repository.fetchRealmChangePin(item: searchedMemos[indexPath.row])
-                        self.mainView.tableView.reloadData()
-                    } else {
-                        var style = ToastStyle()
-                        style.backgroundColor = .CustomTintColor
-                        self.mainView.makeToast("최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center, style: style)
+                    return UISwipeActionsConfiguration(actions: [pin])
+                    
+                } else if pinMemos.count >= 5 && !searchedMemos[indexPath.row].realmPin { // 고정되지 않은 핀
+                    let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+                        completionHandler(true)
+                        self.showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
                     }
                     
+                    pin.backgroundColor = .CustomTintColor
+                    pin.image = UIImage(systemName: "pin.fill")
+                    
                     return UISwipeActionsConfiguration(actions: [pin])
+                    
+                } else {
+                    let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+                        completionHandler(true)
+                        self.repository.fetchRealmChangePin(item: self.searchedMemos[indexPath.row])
+                        self.mainView.tableView.reloadData()
+                    }
+                    
+                    pin.backgroundColor = .CustomTintColor
+                    pin.image = UIImage(systemName: "pin.slash.fill")
+                    
+                    return UISwipeActionsConfiguration(actions: [pin])
+                    
                 }
-            } else {
+            } else { // 메인화면 (고정된 메모)
                 let pin = togglePin(section: 0, item: pinMemos[indexPath.row])
                 return UISwipeActionsConfiguration(actions: [pin])
             }
-            
         } else if indexPath.section == Section.secondSection.rawValue {
             if pinMemos.count <= 4 {
                 let pin = togglePin(section: 1, item: memos[indexPath.row])
@@ -403,21 +408,67 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
                     completionHandler(true)
+                    self.showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
                 }
-                
+
                 pin.backgroundColor = .CustomTintColor
                 pin.image = UIImage(systemName: "pin.fill")
-                
-                var style = ToastStyle()
-                style.backgroundColor = .CustomTintColor
-                self.mainView.makeToast("최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center, style: style)
-                
+
                 return UISwipeActionsConfiguration(actions: [pin])
             }
         } else {
             print("핀 스와이프 동작에 문제가 발생했습니다.")
             return nil
         }
+
+//        if indexPath.section == Section.firstSection.rawValue {
+//            // (코드 개선 필요)
+//            if searchControllerIsActive {
+//                if pinMemos.count <= 4 {
+//                    let pin = togglePin(section: 0, item: searchedMemos[indexPath.row])
+//                    return UISwipeActionsConfiguration(actions: [pin])
+//                } else {
+//                    let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+//                        completionHandler(true)
+//                    }
+//
+//                    pin.backgroundColor = .CustomTintColor
+//                    pin.image = searchedMemos[indexPath.row].realmPin ? UIImage(systemName: "pin.slash.fill") : UIImage(systemName: "pin.fill")
+//
+//                    if pin.image == UIImage(systemName: "pin.slash.fill") {
+//                        self.repository.fetchRealmChangePin(item: searchedMemos[indexPath.row])
+//                        self.mainView.tableView.reloadData()
+//                    } else {
+//                        showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
+//                    }
+//
+//                    return UISwipeActionsConfiguration(actions: [pin])
+//                }
+//            } else {
+//                let pin = togglePin(section: 0, item: pinMemos[indexPath.row])
+//                return UISwipeActionsConfiguration(actions: [pin])
+//            }
+//
+//        } else if indexPath.section == Section.secondSection.rawValue {
+//            if pinMemos.count <= 4 {
+//                let pin = togglePin(section: 1, item: memos[indexPath.row])
+//                return UISwipeActionsConfiguration(actions: [pin])
+//            } else {
+//                let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
+//                    completionHandler(true)
+//                }
+//
+//                pin.backgroundColor = .CustomTintColor
+//                pin.image = UIImage(systemName: "pin.fill")
+//
+//                showToast(message: "최대 5개의 메모를 고정할 수 있습니다.", duration: 1.0, position: .center)
+//
+//                return UISwipeActionsConfiguration(actions: [pin])
+//            }
+//        } else {
+//            print("핀 스와이프 동작에 문제가 발생했습니다.")
+//            return nil
+//        }
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

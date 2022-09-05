@@ -21,7 +21,7 @@ class WriteEditView: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func configureUI() {
+    override func configure() {
         self.addSubview(textView)
     }
     

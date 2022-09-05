@@ -1,6 +1,6 @@
 import UIKit
 
-class WalkthroughViewController: BaseViewController {
+final class WalkthroughViewController: BaseViewController {
     
     let mainView = WalkthroughtView()
     

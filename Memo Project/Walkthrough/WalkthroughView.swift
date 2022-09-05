@@ -2,7 +2,7 @@ import UIKit
 
 import SnapKit
 
-class WalkthroughtView: BaseView {
+final class WalkthroughtView: BaseView {
     
     let noticeView: UIView = {
         let view = UIView(frame: .zero)
@@ -52,7 +52,7 @@ class WalkthroughtView: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func configureUI() {
+    override func configure() {
         self.backgroundColor = .black.withAlphaComponent(0.7)
         [noticeView].forEach {
             self.addSubview($0)

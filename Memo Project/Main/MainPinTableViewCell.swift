@@ -6,19 +6,19 @@ final class MainPinTableViewCell: BaseTableViewCell {
     
     let pinTitleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
+        view.configure(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
         return view
     }()
     
     let pinDateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
+        view.configure(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
     let pinContentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
+        view.configure(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
@@ -45,7 +45,7 @@ final class MainPinTableViewCell: BaseTableViewCell {
         pinContentLabel.text = data.realmContent
     }
     
-    override func configureUI() {
+    override func configure() {
         [pinTitleLabel, pinStackView].forEach {
             self.contentView.addSubview($0)
             self.backgroundColor = .CustomBackgroundColorForSubView

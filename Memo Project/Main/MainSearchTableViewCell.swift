@@ -6,19 +6,19 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     
     let searchTitleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
+        view.configure(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
         return view
     }()
     
     let searchDateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
+        view.configure(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
     let searchContentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
+        view.configure(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
@@ -45,7 +45,7 @@ final class MainSearchTableViewCell: BaseTableViewCell {
         searchContentLabel.text = data.realmContent
     }
     
-    override func configureUI() {
+    override func configure() {
         [searchTitleLabel, searchStackView].forEach {
             self.contentView.addSubview($0)
             self.backgroundColor = .CustomBackgroundColorForSubView

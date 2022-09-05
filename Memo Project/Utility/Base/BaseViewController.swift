@@ -4,10 +4,10 @@ class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
+        configure()
         setConstraints()
     }
     
-    func configureUI() { }
+    func configure() { }
     func setConstraints() { }
 }

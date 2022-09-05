@@ -4,7 +4,7 @@ class BaseTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureUI()
+        configure()
         setConstraints()
     }
     
@@ -12,6 +12,6 @@ class BaseTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureUI() { }
+    func configure() { }
     func setConstraints() { }
 }

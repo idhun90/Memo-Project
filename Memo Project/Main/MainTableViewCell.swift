@@ -6,19 +6,19 @@ final class MainTableViewCell: BaseTableViewCell {
     
     let titleLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
+        view.configure(FontSize: 17, weight: .bold, color: .CustomTitleLabelColor)
         return view
     }()
     
     let dateLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
+        view.configure(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
     let contentLabel: CustomForCellLabel = {
         let view = CustomForCellLabel()
-        view.configureUI(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
+        view.configure(FontSize: 15, weight: .regular, color: .CustomContentDateLabelColor)
         return view
     }()
     
@@ -45,7 +45,7 @@ final class MainTableViewCell: BaseTableViewCell {
         contentLabel.text = data.realmContent
     }
     
-    override func configureUI() {
+    override func configure() {
         [titleLabel, stackView].forEach {
             self.contentView.addSubview($0)
             self.backgroundColor = .CustomBackgroundColorForSubView

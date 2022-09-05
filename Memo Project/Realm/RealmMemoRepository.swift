@@ -14,7 +14,7 @@ protocol RealmMemoRepositoryType {
     func fetchRealmAddItem(item: RealmMemo)
     func fetchRealmDeleteItem(item: RealmMemo)
     func fetchRealmChangePin(item: RealmMemo)
-    func fetchRealmUpdate(objectId: ObjectId, originalText: String, title: String, content: String?, editedDate: Date?)
+    func fetchRealmUpdate(objectId: ObjectId, originalText: String, title: String, content: String?, editedDate: Date)
     
 }
 
@@ -45,11 +45,7 @@ class RealmMemoRepository: RealmMemoRepositoryType {
     func fetchRealmFilterSearchByText(text: String) -> Results<RealmMemo> {
         return localRealm.objects(RealmMemo.self).filter("realmTitle CONTAINS[c] '\(text)' OR realmContent CONTAINS[c] '\(text)'").sorted(byKeyPath: "realmDate", ascending: false)
     }
-    
-    //    func fetchRealmFilter() -> Results<RealmMemo> {
-    //        <#code#>
-    //    }
-    
+
     func fetchRealmAddItem(item: RealmMemo) {
         do {
             try localRealm.write {
@@ -82,10 +78,10 @@ class RealmMemoRepository: RealmMemoRepositoryType {
         }
     }
     
-    func fetchRealmUpdate(objectId: ObjectId, originalText: String, title: String, content: String?, editedDate: Date?) {
+    func fetchRealmUpdate(objectId: ObjectId, originalText: String, title: String, content: String?, editedDate: Date) {
         do {
             try localRealm.write {
-                localRealm.create(RealmMemo.self, value: ["objectId": objectId, "realmOriginalText": originalText, "realmTitle": title, "realmContent": content ?? "", "realmDate": editedDate ?? ""], update: .modified)
+                localRealm.create(RealmMemo.self, value: ["objectId": objectId, "realmOriginalText": originalText, "realmTitle": title, "realmContent": content ?? "", "realmDate": editedDate], update: .modified)
             }
         } catch let error {
             print("데이터 업데이트 실패", error)

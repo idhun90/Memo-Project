@@ -2,7 +2,7 @@ import Foundation
 
 import RealmSwift
 
-class RealmMemo: Object {
+final class RealmMemo: Object {
     @Persisted(primaryKey: true) var objectId: ObjectId
     
     @Persisted var realmOriginalText: String

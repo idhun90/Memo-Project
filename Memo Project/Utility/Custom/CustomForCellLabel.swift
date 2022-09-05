@@ -1,6 +1,6 @@
 import UIKit
 
-class CustomForCellLabel: UILabel {
+final class CustomForCellLabel: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -10,7 +10,7 @@ class CustomForCellLabel: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureUI(FontSize: CGFloat, weight: UIFont.Weight, color: UIColor) {
+    func configure(FontSize: CGFloat, weight: UIFont.Weight, color: UIColor) {
         self.font = .systemFont(ofSize: FontSize, weight: weight)
         self.textColor = color
         self.numberOfLines = 1
