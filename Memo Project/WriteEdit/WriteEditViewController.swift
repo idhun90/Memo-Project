@@ -65,7 +65,6 @@ class WriteEditViewController: BaseViewController {
     }
     
     @objc func finishButtonClicked() {
-        // 완료 버튼 누를 시 데이터 저장 및 키보드 내림 (saveTextToRelam을 이곳에 작성하면, DidEndEditing과 중복 호출로 두 번 저장됨)
         // 완료 버튼을 누르고 만약 앱을 완전히 종료되면 작성된 메모는 저장되어야 하는가
         self.mainView.textView.resignFirstResponder()
     }
@@ -95,7 +94,7 @@ class WriteEditViewController: BaseViewController {
                 let memo = RealmMemo(realmOriginalText: originalText, realmTitle: title, realmContent: nil, realmDate: Date())
                 repository.fetchRealmAddItem(item: memo)
             } else {
-                print("빈 텍스트는 저장되지 않습니다.")
+                print("빈 메모는 저장되지 않습니다.")
             }
             
         } else { // 수정 화면일 때
@@ -108,11 +107,11 @@ class WriteEditViewController: BaseViewController {
                     let title = separateTitle(originalText: originalText)
                     let content = separateContent(originalText: originalText, title: title)
                     self.repository.fetchRealmUpdate(objectId: receiveMemo!.objectId, originalText: originalText, title: title, content: content, editedDate: Date())
-                    print("수정된 데이터로 저장됩니다.")
+                    print("수정된 메모로 저장됩니다.")
                 } else if !originalText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     let title = originalText
                     self.repository.fetchRealmUpdate(objectId: receiveMemo!.objectId, originalText: originalText, title: title, content: nil, editedDate: Date())
-                    print("수정된 데이터로 저장됩니다.")
+                    print("수정된 메모로 저장됩니다.")
                 } else {
                     self.repository.fetchRealmDeleteItem(item: receiveMemo!)
                     print("수정된 메모가 빈 텍스트여서 삭제됩니다.")

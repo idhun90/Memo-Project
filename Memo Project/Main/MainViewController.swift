@@ -57,6 +57,10 @@ final class MainViewController: BaseViewController {
     
     var searchedMemos: Results<RealmMemo>!
     
+    var searchControllerIsActive: Bool {
+        return self.mainView.searchController.isActive
+    }
+    
     override func loadView() {
         self.view = mainView
     }
@@ -143,11 +147,7 @@ final class MainViewController: BaseViewController {
         
         return total
     }
-    
-    var searchControllerIsActive: Bool {
-        return self.mainView.searchController.isActive
-    }
-    
+        
     func togglePin(section: Int, item: RealmMemo) -> UIContextualAction {
         
         let pin = UIContextualAction(style: .normal, title: nil) { action, view, completionHandler in
@@ -208,12 +208,10 @@ final class MainViewController: BaseViewController {
 extension MainViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("편집 시작")
         self.navigationController?.isToolbarHidden = true
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("취소 버튼 클릭")
         self.navigationController?.isToolbarHidden = false
     }
     
@@ -227,10 +225,6 @@ extension MainViewController: UISearchResultsUpdating {
         guard let searchedText = searchController.searchBar.text else { return }
         let searchedItems = repository.fetchRealmFilterSearchByText(text: searchedText.trimmingCharacters(in: .whitespacesAndNewlines))
         searchedMemos = searchedItems
-        
-        print("searchedMemos 갯수:", searchedMemos.count)
-        print(searchControllerIsActive)
-        
         mainView.tableView.reloadData()
     }
 }

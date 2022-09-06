@@ -74,7 +74,7 @@ final class MainSearchTableViewCell: BaseTableViewCell {
     }
     
     override func prepareForReuse() {
-        super.prepareForReuse() // 깜빡하고 작성 안 했더니 검색 화면에서 핀 고정/해제 할 때마다 들쑥날쑥..
+        super.prepareForReuse()
         self.searchContentLabel.textColor = .CustomContentDateLabelColor
         self.searchTitleLabel.textColor = .CustomTitleLabelColor
     }
