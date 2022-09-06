@@ -323,7 +323,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             vc.receiveMemo = memos[indexPath.row]
         }
         
-        self.navigationController?.navigationBar.topItem?.backButtonTitle = "메모"
+        self.navigationController?.navigationBar.topItem?.backButtonTitle = searchControllerIsActive ? "검색" : "메모"
         transition(viewController: vc, transitionStyle: .push)
     }
     
