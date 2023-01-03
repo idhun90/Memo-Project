@@ -23,11 +23,14 @@ class WriteEditView: BaseView {
     
     override func configure() {
         self.addSubview(textView)
+        backgroundColor = .CustomBackgroundColorForView
     }
     
     override func setConstraints() {
         textView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-10)
         }
     }
 }

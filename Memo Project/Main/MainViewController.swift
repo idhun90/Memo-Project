@@ -5,7 +5,7 @@ import Toast
 
 /*
  해결 못한 문제점
- - 텍스트가 많아지면 키보드에 가려지는 문제 (라이브러리 고려했으나 안 예뻐서..)
+ - 텍스트가 많아지면 키보드에 가려지는 문제
  - Leading, Trailing Swipe 코드 간소화 필요 (특히 LeadingSwipe)
  - 작성/수정 화면 빈 텍스트 계산 로직 개선 필요
  - 작성/수정 화면에서 값 저장 시점 고민 필요
@@ -234,6 +234,7 @@ extension MainViewController: UISearchResultsUpdating {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        print(#function)
         return self.searchControllerIsActive ? 1 : 2
     }
     
